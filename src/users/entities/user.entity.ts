@@ -1,5 +1,4 @@
-import { Role } from 'src/roles/entities/role.entity'
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm'
+import { Column, Entity } from 'typeorm'
 
 @Entity({
     name: 'users',
@@ -42,8 +41,4 @@ export class User {
         type: 'boolean',
     })
     public active: boolean
-
-    @OneToOne(() => Role)
-    @JoinColumn()
-    public role: Role
 }

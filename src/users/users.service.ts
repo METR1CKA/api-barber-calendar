@@ -1,26 +1,53 @@
 import { UpdateUserDto } from './dto/update-user.dto'
 import { CreateUserDto } from './dto/create-user.dto'
+import { InjectRepository } from '@nestjs/typeorm'
+import { GetUsersDto } from './dto/get-users.dto'
+import { User } from './entities/user.entity'
 import { Injectable } from '@nestjs/common'
+import { Repository } from 'typeorm'
 
 @Injectable()
 export class UsersService {
-    create(createUserDto: CreateUserDto) {
-        return 'This action adds a new user'
+    constructor(
+        @InjectRepository(User) private userRepository: Repository<User>,
+    ) {}
+
+    async create({ createUserDto }: { createUserDto: CreateUserDto }) {
+        const newUser = this.userRepository.create(createUserDto)
+
+        return await this.userRepository.save(newUser)
     }
 
-    findAll() {
-        return `This action returns all users`
+    async findAll({ qs }: { qs: GetUsersDto }) {
+        const { page, limit } = qs
+
+        return await this.userRepository.find({
+            skip: limit * (page - 1),
+            take: limit,
+            order: { id: 'DESC' },
+        })
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} user`
+    async findOne(data: { id?: number; email?: string; active?: boolean }) {
+        return await this.userRepository.findOne({ where: data })
     }
 
-    update(id: number, updateUserDto: UpdateUserDto) {
-        return `This action updates a #${id} user`
+    async update({
+        user,
+        updateUserDto,
+    }: {
+        user: User
+        updateUserDto: UpdateUserDto
+    }) {
+        const userUpdated = this.userRepository.merge(user, updateUserDto)
+        return await this.userRepository.save(userUpdated)
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} user`
+    async remove({ user }: { user: User }) {
+        const userDeleted = this.userRepository.merge(user, {
+            active: !user.active,
+        })
+
+        return await this.userRepository.save(userDeleted)
     }
 }

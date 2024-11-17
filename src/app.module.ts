@@ -1,9 +1,10 @@
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import { UsersModule } from './users/users.module'
+import { AppController } from './app.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { Module } from '@nestjs/common'
-import { UsersModule } from './users/users.module'
-import { RolesModule } from './roles/roles.module'
 import env from 'config/env'
+import { User } from './users/entities/user.entity'
 
 @Module({
     imports: [
@@ -22,15 +23,13 @@ import env from 'config/env'
                 username: configService.get<string>('env.DB_USER'),
                 password: configService.get<string>('env.DB_PASSWORD'),
                 database: configService.get<string>('env.DB_DB_NAME'),
-                entities: [],
+                entities: [User],
                 synchronize: configService.get<boolean>('env.SYNC_DB'),
-                // synchronize: false,
             }),
         }),
         UsersModule,
-        RolesModule,
     ],
-    controllers: [],
+    controllers: [AppController],
     providers: [],
 })
 export class AppModule {}
