@@ -3,9 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { Module } from '@nestjs/common'
 import { UsersModule } from './users/users.module'
 import { RolesModule } from './roles/roles.module'
-import { SchedulesModule } from './schedules/schedules.module'
-import { AppoimentsModule } from './appoiments/appoiments.module'
-import { ServicesModule } from './services/services.module'
 import env from 'config/env'
 
 @Module({
@@ -32,9 +29,6 @@ import env from 'config/env'
         }),
         UsersModule,
         RolesModule,
-        SchedulesModule,
-        AppoimentsModule,
-        ServicesModule,
     ],
     controllers: [],
     providers: [],
