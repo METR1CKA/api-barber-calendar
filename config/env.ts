@@ -8,14 +8,15 @@ type ENV = {
 }
 
 const envSchema = Joi.object({
-    HOST: Joi.string().required().default('localhost'),
-    PORT: Joi.number()
-        .positive()
-        .port()
-        .min(0)
-        .max(65535)
-        .required()
-        .default(3000),
+    HOST: Joi.string().required(),
+    PORT: Joi.number().positive().port().min(0).max(65535).required(),
+    DB_CONNECTION: Joi.string().required(),
+    DB_HOST: Joi.string().required(),
+    DB_PORT: Joi.number().required(),
+    DB_USER: Joi.string().required(),
+    DB_PASSWORD: Joi.string().required(),
+    DB_DB_NAME: Joi.string().required(),
+    SYNC_DB: Joi.boolean().required(),
 }).unknown(true)
 
 const { error, value } = envSchema.validate(process.env)
