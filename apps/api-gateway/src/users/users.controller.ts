@@ -11,7 +11,7 @@ import {
     ParseIntPipe,
 } from '@nestjs/common'
 import { ClientProxy, RpcException } from '@nestjs/microservices'
-import { USER_SERVICE } from 'apps/api-gateway/config/services'
+import { USER_SERVICE } from 'apps/api-gateway/config/service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { GetUsersDto } from './dto/get-users.dto'

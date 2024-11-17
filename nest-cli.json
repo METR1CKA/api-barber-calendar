@@ -19,15 +19,6 @@
                 "tsConfigPath": "apps/api-gateway/tsconfig.app.json"
             }
         },
-        "task-service": {
-            "type": "application",
-            "root": "apps/task-service",
-            "entryFile": "main",
-            "sourceRoot": "apps/task-service/src",
-            "compilerOptions": {
-                "tsConfigPath": "apps/task-service/tsconfig.app.json"
-            }
-        },
         "user-service": {
             "type": "application",
             "root": "apps/user-service",

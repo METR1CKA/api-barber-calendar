@@ -1,7 +1,6 @@
 import { ConfigModule } from '@nestjs/config'
 import { UsersModule } from './users/users.module'
-import { TasksModule } from './tasks/tasks.module'
-import { schema } from '../config/services'
+import { schema } from '../config/service'
 import { Module } from '@nestjs/common'
 import env from '../config/env'
 
@@ -14,7 +13,6 @@ import env from '../config/env'
             validationSchema: schema,
         }),
         UsersModule,
-        TasksModule,
     ],
     controllers: [],
     providers: [],

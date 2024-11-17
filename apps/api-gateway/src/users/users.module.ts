@@ -1,5 +1,5 @@
 import { ClientsModule, Transport } from '@nestjs/microservices'
-import { USER_SERVICE } from 'apps/api-gateway/config/services'
+import { USER_SERVICE } from 'apps/api-gateway/config/service'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { UsersController } from './users.controller'
 import { Module } from '@nestjs/common'

@@ -3,6 +3,7 @@ import { User } from './users/entities/user.entity'
 import { UsersModule } from './users/users.module'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { Module } from '@nestjs/common'
+import { RolesModule } from './roles/roles.module';
 import env from '../config/env'
 import * as Joi from 'joi'
 
@@ -39,6 +40,7 @@ import * as Joi from 'joi'
             }),
         }),
         UsersModule,
+        RolesModule,
     ],
     controllers: [],
     providers: [],

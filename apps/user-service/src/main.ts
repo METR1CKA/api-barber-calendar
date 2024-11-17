@@ -31,7 +31,7 @@ async function bootstrap() {
 
     await app.listen()
 
-    logger.log(`User Service is running on: ${HOST}:${PORT}`)
+    logger.log(`User Service is running on: '${HOST}:${PORT}'`)
 }
 
 bootstrap()
