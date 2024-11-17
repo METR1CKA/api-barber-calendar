@@ -14,6 +14,7 @@ import {
 import { CreateUserDto } from 'src/dtos/users/create-user.dto'
 import { UpdateUserDto } from 'src/dtos/users/update-user.dto'
 import { GetUsersDto } from 'src/dtos/users/get-users.dto'
+import { ApiBody, ApiResponse } from '@nestjs/swagger'
 import { UsersService } from './users.service'
 import { Response } from 'express'
 
@@ -22,10 +23,51 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     @Post()
+    @ApiBody({ type: CreateUserDto })
+    @ApiResponse({
+        status: HttpStatus.CREATED,
+        description: 'User created',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        status: { type: 'string' },
+                        message: { type: 'string' },
+                        data: {
+                            type: 'object',
+                            properties: {
+                                id: { type: 'number' },
+                                name: { type: 'string' },
+                                email: { type: 'string' },
+                                active: { type: 'boolean' },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    })
+    @ApiResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'User already exists',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        status: { type: 'string' },
+                        message: { type: 'string' },
+                        data: { default: null },
+                    },
+                },
+            },
+        },
+    })
     async create(
         @Body() createUserDto: CreateUserDto,
         @Res() response: Response,
-    ): Promise<Response<any, Record<string, any>>> {
+    ): Promise<Response> {
         const userExists = await this.usersService.findOne({
             email: createUserDto.email,
             active: true,
@@ -49,10 +91,37 @@ export class UsersController {
     }
 
     @Get()
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Users found',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        status: { type: 'string' },
+                        message: { type: 'string' },
+                        data: {
+                            type: 'array',
+                            items: {
+                                type: 'object',
+                                properties: {
+                                    id: { type: 'number' },
+                                    name: { type: 'string' },
+                                    email: { type: 'string' },
+                                    active: { type: 'boolean' },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    })
     async findAll(
         @Query() query: GetUsersDto,
         @Res() response: Response,
-    ): Promise<Response<any, Record<string, any>>> {
+    ): Promise<Response> {
         const users = await this.usersService.findAll({ qs: query })
 
         return response.status(HttpStatus.OK).json({
@@ -63,10 +132,50 @@ export class UsersController {
     }
 
     @Get(':id')
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'User found',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        status: { type: 'string' },
+                        message: { type: 'string' },
+                        data: {
+                            type: 'object',
+                            properties: {
+                                id: { type: 'number' },
+                                name: { type: 'string' },
+                                email: { type: 'string' },
+                                active: { type: 'boolean' },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    })
+    @ApiResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'User not found',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        status: { type: 'string' },
+                        message: { type: 'string' },
+                        data: { default: null },
+                    },
+                },
+            },
+        },
+    })
     async findOne(
         @Param('id', ParseIntPipe) id: number,
         @Res() response: Response,
-    ): Promise<Response<any, Record<string, any>>> {
+    ): Promise<Response> {
         const user = await this.usersService.findOne({ id })
 
         if (!user) {
@@ -85,11 +194,52 @@ export class UsersController {
     }
 
     @Patch(':id')
+    @ApiBody({ type: UpdateUserDto })
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'User updated',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        status: { type: 'string' },
+                        message: { type: 'string' },
+                        data: {
+                            type: 'object',
+                            properties: {
+                                id: { type: 'number' },
+                                name: { type: 'string' },
+                                email: { type: 'string' },
+                                active: { type: 'boolean' },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    })
+    @ApiResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'User not found',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        status: { type: 'string' },
+                        message: { type: 'string' },
+                        data: { default: null },
+                    },
+                },
+            },
+        },
+    })
     async update(
         @Param('id', ParseIntPipe) id: number,
         @Body() updateUserDto: UpdateUserDto,
         @Res() response: Response,
-    ): Promise<Response<any, Record<string, any>>> {
+    ): Promise<Response> {
         const user = await this.usersService.findOne({ id })
 
         if (!user) {
@@ -113,10 +263,26 @@ export class UsersController {
     }
 
     @Delete(':id')
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'User removed',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        status: { type: 'string' },
+                        message: { type: 'string' },
+                        data: { default: null },
+                    },
+                },
+            },
+        },
+    })
     async remove(
         @Param('id', ParseIntPipe) id: number,
         @Res() response: Response,
-    ): Promise<Response<any, Record<string, any>>> {
+    ): Promise<Response> {
         const user = await this.usersService.findOne({
             id,
         })

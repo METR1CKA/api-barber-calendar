@@ -1,11 +1,11 @@
 import { Logger, ValidationPipe } from '@nestjs/common'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 
 async function bootstrap() {
-    const logger = new Logger('API Barber')
-
+    // Build App
     const app = await NestFactory.create(AppModule)
 
     const configService = app.get(ConfigService)
@@ -25,9 +25,30 @@ async function bootstrap() {
         }),
     )
 
-    await app.listen(PORT, HOST, () => {
-        logger.log(`Server running at: ${HOST}:${PORT}`)
-    })
+    // Swagger
+    const document = new DocumentBuilder()
+        .setTitle('API BarberShop')
+        .setDescription('API for BarberShop management')
+        .setVersion('1.0')
+        .addServer(`http://${HOST}:${PORT}`, 'Development')
+        .build()
+
+    SwaggerModule.setup(
+        'api/docs',
+        app,
+        SwaggerModule.createDocument(app, document),
+    )
+
+    await app.listen(PORT, HOST)
+
+    // Logger
+    const logger = new Logger('API Barber')
+    const loggerSwagger = new Logger('Swagger')
+
+    const url = await app.getUrl()
+
+    logger.log(`Server running at: ${url}`)
+    loggerSwagger.log(`Swagger running at: ${url}/api/docs`)
 }
 
 bootstrap()
