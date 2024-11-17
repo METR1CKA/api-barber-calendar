@@ -11,9 +11,9 @@ import {
     Query,
     ParseIntPipe,
 } from '@nestjs/common'
-import { CreateUserDto } from './dto/create-user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
-import { GetUsersDto } from './dto/get-users.dto'
+import { CreateUserDto } from 'src/dtos/users/create-user.dto'
+import { UpdateUserDto } from 'src/dtos/users/update-user.dto'
+import { GetUsersDto } from 'src/dtos/users/get-users.dto'
 import { UsersService } from './users.service'
 import { Response } from 'express'
 
@@ -66,7 +66,7 @@ export class UsersController {
     async findOne(
         @Param('id', ParseIntPipe) id: number,
         @Res() response: Response,
-    ) {
+    ): Promise<Response<any, Record<string, any>>> {
         const user = await this.usersService.findOne({ id })
 
         if (!user) {
@@ -89,7 +89,7 @@ export class UsersController {
         @Param('id', ParseIntPipe) id: number,
         @Body() updateUserDto: UpdateUserDto,
         @Res() response: Response,
-    ) {
+    ): Promise<Response<any, Record<string, any>>> {
         const user = await this.usersService.findOne({ id })
 
         if (!user) {
@@ -116,7 +116,7 @@ export class UsersController {
     async remove(
         @Param('id', ParseIntPipe) id: number,
         @Res() response: Response,
-    ) {
+    ): Promise<Response<any, Record<string, any>>> {
         const user = await this.usersService.findOne({
             id,
         })

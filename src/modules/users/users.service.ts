@@ -1,8 +1,8 @@
-import { UpdateUserDto } from './dto/update-user.dto'
-import { CreateUserDto } from './dto/create-user.dto'
+import { CreateUserDto } from 'src/dtos/users/create-user.dto'
+import { UpdateUserDto } from 'src/dtos/users/update-user.dto'
+import { GetUsersDto } from 'src/dtos/users/get-users.dto'
 import { InjectRepository } from '@nestjs/typeorm'
-import { GetUsersDto } from './dto/get-users.dto'
-import { User } from './entities/user.entity'
+import { User } from 'src/entities/user.entity'
 import { Injectable } from '@nestjs/common'
 import { Repository } from 'typeorm'
 
