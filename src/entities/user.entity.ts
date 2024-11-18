@@ -1,5 +1,5 @@
 import { ApiProperty, ApiSchema } from '@nestjs/swagger'
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
+import { Column, Entity, ManyToOne } from 'typeorm'
 import { Role } from './role.entity'
 
 @ApiSchema({ name: 'User' })
@@ -121,6 +121,15 @@ export class User {
     })
     public active: boolean
 
+    @ApiProperty({
+        description: 'Id del rol del usuario',
+        format: 'int',
+        example: 1,
+        nullable: true,
+        required: true,
+        type: 'integer',
+        title: 'roleId',
+    })
     @Column({
         type: 'int',
         nullable: true,

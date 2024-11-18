@@ -1,12 +1,15 @@
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { UsersModule } from './modules/users/users.module'
 import { RolesModule } from './modules/roles/roles.module'
+import { AuthModule } from './modules/auth/auth.module'
+import { HashModule } from './common/hash/hash.module'
 import { AppController } from './app.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { User } from './entities/user.entity'
-import { Module } from '@nestjs/common'
-import env from 'config/env'
 import { Role } from './entities/role.entity'
+import { Module } from '@nestjs/common'
+import { JwtModule } from '@nestjs/jwt'
+import env from 'config/env'
 
 @Module({
     imports: [
@@ -29,8 +32,19 @@ import { Role } from './entities/role.entity'
                 synchronize: configService.get<boolean>('env.SYNC_DB'),
             }),
         }),
+        JwtModule.registerAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: async (configService: ConfigService) => ({
+                secret: configService.get<string>('API_JWT_SECRET'),
+                signOptions: { expiresIn: '1year' },
+                global: true,
+            }),
+        }),
         UsersModule,
         RolesModule,
+        AuthModule,
+        HashModule,
     ],
     controllers: [AppController],
     providers: [],

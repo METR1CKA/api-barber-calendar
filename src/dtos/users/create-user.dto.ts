@@ -5,8 +5,10 @@ import {
     IsPositive,
     IsString,
     MaxLength,
+    MinLength,
 } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
+import { Transform } from 'class-transformer'
 
 export class CreateUserDto {
     @ApiProperty({
@@ -70,9 +72,13 @@ export class CreateUserDto {
     @IsNotEmpty({
         message: 'La contraseña es requerida',
     })
-    @MaxLength(150, {
-        message: 'La contraseña debe tener menos de 150 caracteres',
+    @MaxLength(20, {
+        message: 'La contraseña debe tener menos de 20 caracteres',
     })
+    @MinLength(6, {
+        message: 'La contraseña debe tener al menos 6 caracteres',
+    })
+    @Transform(({ value }) => value.trim().split(' ').join(''))
     public password: string
 
     @ApiProperty({
