@@ -1,3 +1,6 @@
+import { TimezoneMiddleware } from './common/timezone/timezone.middleware'
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
+import { DatetimeModule } from './common/datetime/datetime.module'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { UsersModule } from './modules/users/users.module'
 import { RolesModule } from './modules/roles/roles.module'
@@ -7,7 +10,6 @@ import { AppController } from './app.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { User } from './entities/user.entity'
 import { Role } from './entities/role.entity'
-import { Module } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
 import env from 'config/env'
 
@@ -38,7 +40,7 @@ import env from 'config/env'
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => ({
                 secret: configService.get<string>('API_JWT_SECRET'),
-                signOptions: { expiresIn: '1year' },
+                signOptions: { expiresIn: '1d' },
                 global: true,
             }),
         }),
@@ -46,8 +48,13 @@ import env from 'config/env'
         RolesModule,
         AuthModule,
         HashModule,
+        DatetimeModule,
     ],
     controllers: [AppController],
     providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+    public configure(consumer: MiddlewareConsumer) {
+        consumer.apply(TimezoneMiddleware).forRoutes('*')
+    }
+}

@@ -9,15 +9,15 @@ export class HashService {
         this.saltRounds = 10
     }
 
-    setSalt({ number }: { number: number }): void {
+    public setSalt({ number }: { number: number }): void {
         this.saltRounds = number
     }
 
-    async generateSalt(): Promise<string> {
+    public async generateSalt(): Promise<string> {
         return await bcrypt.genSalt()
     }
 
-    async hashText({
+    public async hashText({
         plainText,
         salt,
     }: {
@@ -27,7 +27,7 @@ export class HashService {
         return await bcrypt.hash(plainText, salt ?? this.saltRounds)
     }
 
-    async compareHash({
+    public async compareHash({
         plainText,
         hashText,
     }: {

@@ -27,10 +27,10 @@ export class AppController {
             },
         },
     })
-    index(@Res() response: Response): Response {
+    public index(@Res() response: Response): Response {
         return response.status(HttpStatus.OK).json({
             status: 'OK',
-            message: 'Welcome to the API Barbershop V1',
+            message: 'Bienvenido a la API Barbershop V1',
             data: null,
         })
     }

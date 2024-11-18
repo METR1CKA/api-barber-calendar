@@ -1,9 +1,21 @@
-import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common'
+import {
+    Body,
+    Controller,
+    Get,
+    HttpStatus,
+    Post,
+    Req,
+    Res,
+    UseGuards,
+} from '@nestjs/common'
+import { DatetimeService } from 'src/common/datetime/datetime.service'
 import { HashService } from 'src/common/hash/hash.service'
+import { AuthGuard } from 'src/common/auth/auth.guard'
 import { UsersService } from '../users/users.service'
 import { LoginDto } from 'src/dtos/auth/login.dto'
 import { AuthService } from './auth.service'
-import { Response } from 'express'
+import { Request, Response } from 'express'
+import { DateTime } from 'luxon'
 
 @Controller('api/auth')
 export class AuthController {
@@ -11,11 +23,13 @@ export class AuthController {
         private readonly authService: AuthService,
         private readonly userService: UsersService,
         private readonly hashService: HashService,
+        private readonly datetimeService: DatetimeService,
     ) {}
 
     @Post('login')
-    async login(
+    public async login(
         @Body() loginDto: LoginDto,
+        @Req() request: Request,
         @Res() response: Response,
     ): Promise<Response> {
         const user = await this.userService.findOne({
@@ -28,7 +42,7 @@ export class AuthController {
         if (!user) {
             return response.status(HttpStatus.UNAUTHORIZED).json({
                 status: 'ERROR',
-                message: 'Invalid credentials',
+                message: 'Credenciales incorrectas',
                 data: null,
             })
         }
@@ -41,7 +55,7 @@ export class AuthController {
         if (!passwordMatch) {
             return response.status(HttpStatus.UNAUTHORIZED).json({
                 status: 'ERROR',
-                message: 'Invalid credentials',
+                message: 'Credenciales incorrectas',
                 data: null,
             })
         }
@@ -50,23 +64,45 @@ export class AuthController {
             payload: {
                 id: user.id,
                 email: user.email,
-                username: user.username,
                 role: user.role.name,
             },
         })
 
+        const { iat, exp } = await this.authService.validateToken({ token })
+
         return response.status(HttpStatus.OK).json({
             status: 'OK',
-            message: 'User logged in',
+            message: 'Inicio de sesión exitoso',
             data: {
                 token,
+                issuedAt: this.datetimeService.getConvertedTimestampToDateTime({
+                    timestamp: iat,
+                }),
+                expiresAt: this.datetimeService.getConvertedTimestampToDateTime(
+                    {
+                        timestamp: exp,
+                    },
+                ),
             },
         })
     }
 
     @Post('logout')
-    async logout(@Res() response: Response) {}
+    public async logout(@Res() response: Response) {}
 
     @Get('me')
-    async me(@Res() response: Response) {}
+    @UseGuards(AuthGuard)
+    public async me(@Req() request: Request, @Res() response: Response) {
+        const user = await this.userService.findOne({
+            by: {
+                email: request['payload'].email,
+            },
+        })
+
+        return response.status(HttpStatus.OK).json({
+            status: 'OK',
+            message: 'Perfil de usuario',
+            data: user,
+        })
+    }
 }

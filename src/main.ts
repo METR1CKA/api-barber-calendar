@@ -1,5 +1,6 @@
-import { Logger, ValidationPipe } from '@nestjs/common'
+import { NotFoundExceptionFilter } from './common/not-found-exception/not-found-exception.filter'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { Logger, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
@@ -25,6 +26,8 @@ async function bootstrap() {
             transform: true,
         }),
     )
+
+    app.useGlobalFilters(new NotFoundExceptionFilter())
 
     // Swagger
     const document = new DocumentBuilder()
