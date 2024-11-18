@@ -9,10 +9,14 @@ import { Repository } from 'typeorm'
 
 @Injectable()
 export class UsersService {
+    private fields: (keyof User)[]
+
     constructor(
         @InjectRepository(User) private userRepository: Repository<User>,
         private readonly hashService: HashService,
-    ) {}
+    ) {
+        this.fields = ['id', 'email', 'username', 'name', 'lastname', 'active']
+    }
 
     async create({
         createUserDto: { password: user_pass, ...userData },
@@ -36,7 +40,7 @@ export class UsersService {
         const { page, limit } = qs
 
         return await this.userRepository.find({
-            select: ['id', 'email', 'username', 'name', 'lastname', 'active'],
+            select: this.fields,
             skip: limit * (page - 1),
             take: limit,
             order: { id: 'DESC' },
@@ -44,11 +48,29 @@ export class UsersService {
         })
     }
 
-    async findOne(data: { id?: number; email?: string; active?: boolean }) {
+    async findOne({
+        by = {},
+        relations = ['role'],
+        options = { includePassword: false },
+    }: {
+        by?: { id?: number; email?: string; active?: boolean }
+        relations?: string[]
+        options?: { includePassword?: boolean }
+    }) {
+        if (!Object.keys(by).length) {
+            return null
+        }
+
+        const fields = this.fields.slice()
+
+        if (options.includePassword) {
+            fields.push('password')
+        }
+
         return await this.userRepository.findOne({
-            select: ['id', 'email', 'username', 'name', 'lastname', 'active'],
-            where: data,
-            relations: ['role'],
+            select: fields,
+            where: by,
+            relations,
         })
     }
 

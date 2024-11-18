@@ -28,8 +28,8 @@ export class RolesService {
         })
     }
 
-    async findOne(data: { id?: number; name?: string }) {
-        return await this.roleRepository.findOne({ where: data })
+    async findOne({ by }: { by: { id?: number; name?: string } }) {
+        return await this.roleRepository.findOne({ where: by })
     }
 
     async update({

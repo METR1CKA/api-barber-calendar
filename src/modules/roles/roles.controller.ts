@@ -57,7 +57,7 @@ export class RolesController {
         @Res() response: Response,
     ): Promise<Response> {
         const role = await this.rolesService.findOne({
-            id,
+            by: { id },
         })
 
         if (!role) {
@@ -81,7 +81,9 @@ export class RolesController {
         @Body() updateRoleDto: UpdateRoleDto,
         @Res() response: Response,
     ): Promise<Response> {
-        const role = await this.rolesService.findOne({ id })
+        const role = await this.rolesService.findOne({
+            by: { id },
+        })
 
         if (!role) {
             return response.status(HttpStatus.NOT_FOUND).json({
@@ -108,7 +110,9 @@ export class RolesController {
         @Param('id', ParseIntPipe) id: number,
         @Res() response: Response,
     ): Promise<Response> {
-        const role = await this.rolesService.findOne({ id })
+        const role = await this.rolesService.findOne({
+            by: { id },
+        })
 
         if (role) {
             await this.rolesService.remove({ role })

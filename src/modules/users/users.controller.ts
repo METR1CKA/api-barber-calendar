@@ -93,8 +93,10 @@ export class UsersController {
         @Res() response: Response,
     ): Promise<Response> {
         const userExists = await this.usersService.findOne({
-            email: createUserDto.email,
-            active: true,
+            by: {
+                email: createUserDto.email,
+                active: true,
+            },
         })
 
         if (userExists) {
@@ -106,7 +108,9 @@ export class UsersController {
         }
 
         const role = await this.rolesService.findOne({
-            id: createUserDto.roleId,
+            by: {
+                id: createUserDto.roleId,
+            },
         })
 
         if (!role) {
@@ -212,7 +216,9 @@ export class UsersController {
         @Param('id', ParseIntPipe) id: number,
         @Res() response: Response,
     ): Promise<Response> {
-        const user = await this.usersService.findOne({ id })
+        const user = await this.usersService.findOne({
+            by: { id },
+        })
 
         if (!user) {
             return response.status(HttpStatus.NOT_FOUND).json({
@@ -276,7 +282,9 @@ export class UsersController {
         @Body() updateUserDto: UpdateUserDto,
         @Res() response: Response,
     ): Promise<Response> {
-        const user = await this.usersService.findOne({ id })
+        const user = await this.usersService.findOne({
+            by: { id },
+        })
 
         if (!user) {
             return response.status(HttpStatus.NOT_FOUND).json({
@@ -284,6 +292,22 @@ export class UsersController {
                 message: 'User not found',
                 data: null,
             })
+        }
+
+        if (updateUserDto.roleId) {
+            const role = await this.rolesService.findOne({
+                by: {
+                    id: updateUserDto.roleId,
+                },
+            })
+
+            if (!role) {
+                return response.status(HttpStatus.NOT_FOUND).json({
+                    status: 'ERROR',
+                    message: 'Role not found',
+                    data: null,
+                })
+            }
         }
 
         const updatedUser = await this.usersService.update({
@@ -319,7 +343,9 @@ export class UsersController {
         @Param('id', ParseIntPipe) id: number,
         @Res() response: Response,
     ): Promise<Response> {
-        const user = await this.usersService.findOne({ id })
+        const user = await this.usersService.findOne({
+            by: { id },
+        })
 
         if (user) {
             await this.usersService.remove({ user })

@@ -29,11 +29,11 @@ export class HashService {
 
     async compareHash({
         plainText,
-        hash,
+        hashText,
     }: {
         plainText: string
-        hash: string
+        hashText: string
     }): Promise<boolean> {
-        return await bcrypt.compare(plainText, hash)
+        return await bcrypt.compare(plainText, hashText)
     }
 }

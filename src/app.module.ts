@@ -33,9 +33,10 @@ import env from 'config/env'
             }),
         }),
         JwtModule.registerAsync({
+            global: true,
             imports: [ConfigModule],
             inject: [ConfigService],
-            useFactory: async (configService: ConfigService) => ({
+            useFactory: (configService: ConfigService) => ({
                 secret: configService.get<string>('API_JWT_SECRET'),
                 signOptions: { expiresIn: '1year' },
                 global: true,

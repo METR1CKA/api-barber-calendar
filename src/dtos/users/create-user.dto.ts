@@ -75,8 +75,8 @@ export class CreateUserDto {
     @MaxLength(20, {
         message: 'La contraseña debe tener menos de 20 caracteres',
     })
-    @MinLength(6, {
-        message: 'La contraseña debe tener al menos 6 caracteres',
+    @MinLength(8, {
+        message: 'La contraseña debe tener al menos 8 caracteres',
     })
     @Transform(({ value }) => value.trim().split(' ').join(''))
     public password: string
