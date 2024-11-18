@@ -1,4 +1,4 @@
-import { NotFoundExceptionFilter } from './common/exceptions/notFoundException.filter'
+import { NotFoundExceptionFilter } from './core/exceptions/not-found-exception.filter'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { Logger, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'

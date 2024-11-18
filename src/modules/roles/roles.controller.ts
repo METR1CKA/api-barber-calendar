@@ -11,9 +11,9 @@ import {
     Query,
     ParseIntPipe,
 } from '@nestjs/common'
-import { CreateRoleDto } from '../../dtos/roles/create-role.dto'
-import { UpdateRoleDto } from '../../dtos/roles/update-role.dto'
-import { GetRoleDto } from 'src/dtos/roles/get-roles.dto'
+import { GetRoleDto } from 'src/modules/roles/dto/get-roles.dto'
+import { CreateRoleDto } from './dto/create-role.dto'
+import { UpdateRoleDto } from './dto/update-role.dto'
 import { RolesService } from './roles.service'
 import { Response } from 'express'
 

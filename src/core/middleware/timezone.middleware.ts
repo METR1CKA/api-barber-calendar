@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable, NestMiddleware } from '@nestjs/common'
 import { Request, Response, NextFunction } from 'express'
-import { FormatDateTime } from '../luxon/datetime'
+import { FormatDateTime } from 'src/shared/utils/luxon-datetime'
 
 @Injectable()
 export class TimezoneMiddleware implements NestMiddleware {

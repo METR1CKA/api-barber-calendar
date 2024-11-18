@@ -11,11 +11,11 @@ import {
     Query,
     ParseIntPipe,
 } from '@nestjs/common'
-import { CreateUserDto } from '../../dtos/users/create-user.dto'
-import { UpdateUserDto } from '../../dtos/users/update-user.dto'
-import { GetUsersDto } from '../../dtos/users/get-users.dto'
 import { ApiBody, ApiResponse } from '@nestjs/swagger'
 import { RolesService } from '../roles/roles.service'
+import { CreateUserDto } from './dto/create-user.dto'
+import { UpdateUserDto } from './dto/update-user.dto'
+import { GetUsersDto } from './dto/get-users.dto'
 import { UsersService } from './users.service'
 import { Response } from 'express'
 

@@ -8,11 +8,11 @@ import {
     Res,
     UseGuards,
 } from '@nestjs/common'
-import { FormatDateTime } from 'src/common/luxon/datetime'
-import { AuthGuard } from 'src/common/auth/auth.guard'
+import { FormatDateTime } from 'src/shared/utils/luxon-datetime'
+import { LoginDto } from 'src/modules/auth/dto/login.dto'
+import { AuthGuard } from 'src/core/guards/auth.guard'
 import { UsersService } from '../users/users.service'
-import { LoginDto } from 'src/dtos/auth/login.dto'
-import { Hash } from 'src/common/bcrypt/hash'
+import { Hash } from 'src/shared/utils/bcrypt-hash'
 import { AuthService } from './auth.service'
 import { Request, Response } from 'express'
 

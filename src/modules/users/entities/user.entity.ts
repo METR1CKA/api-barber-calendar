@@ -1,6 +1,6 @@
+import { Role } from 'src/modules/roles/entities/role.entity'
 import { ApiProperty, ApiSchema } from '@nestjs/swagger'
 import { Column, Entity, ManyToOne } from 'typeorm'
-import { Role } from './role.entity'
 
 @ApiSchema({ name: 'User' })
 @Entity({
