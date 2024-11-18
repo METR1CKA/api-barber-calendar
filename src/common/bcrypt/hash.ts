@@ -1,23 +1,17 @@
-import { Injectable } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 
-@Injectable()
-export class HashService {
-    private saltRounds: number
+export class Hash {
+    private static saltRounds: number = 10
 
-    constructor() {
-        this.saltRounds = 10
-    }
-
-    public setSalt({ number }: { number: number }): void {
+    public static setSalt({ number }: { number: number }): void {
         this.saltRounds = number
     }
 
-    public async generateSalt(): Promise<string> {
+    public static async generateSalt(): Promise<string> {
         return await bcrypt.genSalt()
     }
 
-    public async hashText({
+    public static async hashText({
         plainText,
         salt,
     }: {
@@ -27,7 +21,7 @@ export class HashService {
         return await bcrypt.hash(plainText, salt ?? this.saltRounds)
     }
 
-    public async compareHash({
+    public static async compareHash({
         plainText,
         hashText,
     }: {

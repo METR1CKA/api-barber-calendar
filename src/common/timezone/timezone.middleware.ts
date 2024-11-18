@@ -1,16 +1,14 @@
 import { HttpStatus, Injectable, NestMiddleware } from '@nestjs/common'
-import { DatetimeService } from '../datetime/datetime.service'
 import { Request, Response, NextFunction } from 'express'
+import { FormatDateTime } from '../luxon/datetime'
 
 @Injectable()
 export class TimezoneMiddleware implements NestMiddleware {
-    constructor(private readonly datetimeService: DatetimeService) {}
-
     public use(req: Request, res: Response, next: NextFunction) {
         const timezone = req.headers['timezone']
 
         if (timezone) {
-            const zone = this.datetimeService.isValidZone({
+            const zone = FormatDateTime.isValidZone({
                 zone: timezone as string,
             })
 
@@ -22,7 +20,7 @@ export class TimezoneMiddleware implements NestMiddleware {
                 })
             }
 
-            this.datetimeService.setLocalZone({ zone: timezone as string })
+            FormatDateTime.setLocalZone({ zone: timezone as string })
         }
 
         next()

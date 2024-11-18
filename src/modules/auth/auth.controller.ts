@@ -8,28 +8,24 @@ import {
     Res,
     UseGuards,
 } from '@nestjs/common'
-import { DatetimeService } from 'src/common/datetime/datetime.service'
-import { HashService } from 'src/common/hash/hash.service'
+import { FormatDateTime } from 'src/common/luxon/datetime'
 import { AuthGuard } from 'src/common/auth/auth.guard'
 import { UsersService } from '../users/users.service'
 import { LoginDto } from 'src/dtos/auth/login.dto'
+import { Hash } from 'src/common/bcrypt/hash'
 import { AuthService } from './auth.service'
 import { Request, Response } from 'express'
-import { DateTime } from 'luxon'
 
 @Controller('api/auth')
 export class AuthController {
     constructor(
         private readonly authService: AuthService,
         private readonly userService: UsersService,
-        private readonly hashService: HashService,
-        private readonly datetimeService: DatetimeService,
     ) {}
 
     @Post('login')
     public async login(
         @Body() loginDto: LoginDto,
-        @Req() request: Request,
         @Res() response: Response,
     ): Promise<Response> {
         const user = await this.userService.findOne({
@@ -47,7 +43,7 @@ export class AuthController {
             })
         }
 
-        const passwordMatch = await this.hashService.compareHash({
+        const passwordMatch = await Hash.compareHash({
             plainText: loginDto.password,
             hashText: user.password,
         })
@@ -75,14 +71,12 @@ export class AuthController {
             message: 'Inicio de sesión exitoso',
             data: {
                 token,
-                issuedAt: this.datetimeService.getConvertedTimestampToDateTime({
+                issuedAt: FormatDateTime.getConvertedTimestampToDateTime({
                     timestamp: iat,
                 }),
-                expiresAt: this.datetimeService.getConvertedTimestampToDateTime(
-                    {
-                        timestamp: exp,
-                    },
-                ),
+                expiresAt: FormatDateTime.getConvertedTimestampToDateTime({
+                    timestamp: exp,
+                }),
             },
         })
     }

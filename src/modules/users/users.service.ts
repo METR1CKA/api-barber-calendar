@@ -1,8 +1,8 @@
 import { CreateUserDto } from 'src/dtos/users/create-user.dto'
 import { UpdateUserDto } from 'src/dtos/users/update-user.dto'
 import { GetUsersDto } from 'src/dtos/users/get-users.dto'
-import { HashService } from 'src/common/hash/hash.service'
 import { InjectRepository } from '@nestjs/typeorm'
+import { Hash } from 'src/common/bcrypt/hash'
 import { User } from 'src/entities/user.entity'
 import { Injectable } from '@nestjs/common'
 import { Repository } from 'typeorm'
@@ -13,7 +13,6 @@ export class UsersService {
 
     constructor(
         @InjectRepository(User) private userRepository: Repository<User>,
-        private readonly hashService: HashService,
     ) {
         this.fields = ['id', 'email', 'username', 'name', 'lastname', 'active']
     }
@@ -25,7 +24,7 @@ export class UsersService {
     }) {
         const newUser = this.userRepository.create({
             ...userData,
-            password: await this.hashService.hashText({
+            password: await Hash.hashText({
                 plainText: user_pass,
             }),
         })

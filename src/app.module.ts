@@ -1,11 +1,9 @@
 import { TimezoneMiddleware } from './common/timezone/timezone.middleware'
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
-import { DatetimeModule } from './common/datetime/datetime.module'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { UsersModule } from './modules/users/users.module'
 import { RolesModule } from './modules/roles/roles.module'
 import { AuthModule } from './modules/auth/auth.module'
-import { HashModule } from './common/hash/hash.module'
 import { AppController } from './app.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { User } from './entities/user.entity'
@@ -47,8 +45,6 @@ import env from 'config/env'
         UsersModule,
         RolesModule,
         AuthModule,
-        HashModule,
-        DatetimeModule,
     ],
     controllers: [AppController],
     providers: [],
