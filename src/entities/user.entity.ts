@@ -1,5 +1,6 @@
 import { ApiProperty, ApiSchema } from '@nestjs/swagger'
-import { Column, Entity } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
+import { Role } from './role.entity'
 
 @ApiSchema({ name: 'User' })
 @Entity({
@@ -7,7 +8,7 @@ import { Column, Entity } from 'typeorm'
 })
 export class User {
     @ApiProperty({
-        description: 'The id of the User',
+        description: 'Id del usuario',
         example: 1,
         required: false,
         format: 'int',
@@ -16,8 +17,9 @@ export class User {
         title: 'id',
     })
     @Column({
-        primary: true,
         generated: 'increment',
+        nullable: false,
+        primary: true,
         type: 'int',
     })
     public id: number
@@ -25,15 +27,16 @@ export class User {
     @ApiProperty({
         description: 'Email del usuario',
         example: 'user@mail.com',
-        required: true,
-        format: 'email',
         nullable: false,
+        format: 'email',
         type: 'string',
         title: 'email',
+        required: true,
     })
     @Column({
-        unique: true,
         type: 'varchar',
+        nullable: false,
+        unique: true,
         length: 150,
     })
     public email: string
@@ -41,75 +44,99 @@ export class User {
     @ApiProperty({
         description: 'Contraseña del usuario',
         example: 'password',
-        required: true,
         format: 'password',
-        nullable: false,
-        type: 'string',
         title: 'password',
+        nullable: false,
+        required: true,
+        type: 'string',
     })
     @Column({
         type: 'varchar',
+        nullable: false,
         length: 150,
     })
     public password: string
 
     @ApiProperty({
-        description: 'Nombre del usuario',
-        example: 'user',
-        required: true,
-        format: 'string',
-        nullable: false,
-        type: 'string',
+        description: 'Nombre de usuario',
         title: 'username',
+        format: 'string',
+        example: 'user',
+        nullable: false,
+        required: true,
+        type: 'string',
     })
     @Column({
         type: 'varchar',
+        nullable: false,
         length: 150,
     })
     public username: string
 
     @ApiProperty({
         description: 'Nombre',
-        example: 'User',
-        required: true,
         format: 'string',
+        example: 'User',
         nullable: false,
+        required: true,
         type: 'string',
         title: 'name',
     })
     @Column({
         type: 'varchar',
+        nullable: false,
         length: 150,
     })
     public name: string
 
     @ApiProperty({
         description: 'Apellido',
-        example: 'User',
-        required: true,
-        format: 'string',
-        nullable: false,
-        type: 'string',
         title: 'lastname',
+        format: 'string',
+        example: 'User',
+        nullable: false,
+        required: true,
+        type: 'string',
     })
     @Column({
         type: 'varchar',
+        nullable: false,
         length: 150,
     })
     public lastname: string
 
     @ApiProperty({
         description: 'Estado del usuario',
-        example: true,
-        required: true,
         format: 'boolean',
         nullable: false,
         type: 'boolean',
         title: 'active',
+        required: true,
+        example: true,
     })
     @Column({
-        default: true,
         type: 'boolean',
+        nullable: false,
+        default: true,
     })
     public active: boolean
+
+    @Column({
+        type: 'int',
+        nullable: true,
+    })
+    public roleId: number
+
+    @ApiProperty({
+        description: 'Rol del usuario',
+        type: 'integer',
+        nullable: false,
+        required: true,
+        format: 'int',
+        example: '1',
+    })
+    @ManyToOne(() => Role, (role) => role.users, {
+        eager: true,
+    })
+    public role: Role
 }

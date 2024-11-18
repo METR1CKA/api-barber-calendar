@@ -1,4 +1,11 @@
-import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator'
+import {
+    IsEmail,
+    IsNotEmpty,
+    IsNumber,
+    IsPositive,
+    IsString,
+    MaxLength,
+} from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class CreateUserDto {
@@ -107,4 +114,27 @@ export class CreateUserDto {
         message: 'El apellido debe tener menos de 150 caracteres',
     })
     public lastname: string
+
+    @ApiProperty({
+        description: 'Rol del usuario',
+        example: 1,
+        required: true,
+        format: 'number',
+        nullable: false,
+        type: 'number',
+        title: 'role_id',
+    })
+    @IsNotEmpty({
+        message: 'El rol es requerido',
+    })
+    @IsNumber(
+        {},
+        {
+            message: 'El rol debe ser un numero',
+        },
+    )
+    @IsPositive({
+        message: 'El rol debe ser un numero positivo',
+    })
+    public roleId: number
 }

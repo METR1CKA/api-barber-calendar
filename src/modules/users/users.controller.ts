@@ -11,16 +11,22 @@ import {
     Query,
     ParseIntPipe,
 } from '@nestjs/common'
-import { CreateUserDto } from 'src/dtos/users/create-user.dto'
-import { UpdateUserDto } from 'src/dtos/users/update-user.dto'
-import { GetUsersDto } from 'src/dtos/users/get-users.dto'
+import { CreateUserDto } from '../../dtos/users/create-user.dto'
+import { UpdateUserDto } from '../../dtos/users/update-user.dto'
+import { GetUsersDto } from '../../dtos/users/get-users.dto'
 import { ApiBody, ApiResponse } from '@nestjs/swagger'
+import { RolesService } from '../roles/roles.service'
 import { UsersService } from './users.service'
 import { Response } from 'express'
 
-@Controller('api/v1/users')
+@Controller({
+    path: 'api/v1/users',
+})
 export class UsersController {
-    constructor(private readonly usersService: UsersService) {}
+    constructor(
+        private readonly usersService: UsersService,
+        private readonly rolesService: RolesService,
+    ) {}
 
     @Post()
     @ApiBody({ type: CreateUserDto })
@@ -37,9 +43,11 @@ export class UsersController {
                         data: {
                             type: 'object',
                             properties: {
-                                id: { type: 'number' },
-                                name: { type: 'string' },
                                 email: { type: 'string' },
+                                username: { type: 'string' },
+                                name: { type: 'string' },
+                                lastname: { type: 'string' },
+                                id: { type: 'number' },
                                 active: { type: 'boolean' },
                             },
                         },
@@ -51,6 +59,22 @@ export class UsersController {
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
         description: 'User already exists',
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        status: { type: 'string' },
+                        message: { type: 'string' },
+                        data: { default: null },
+                    },
+                },
+            },
+        },
+    })
+    @ApiResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'Role not found',
         content: {
             'application/json': {
                 schema: {
@@ -77,6 +101,18 @@ export class UsersController {
             return response.status(HttpStatus.BAD_REQUEST).json({
                 status: 'ERROR',
                 message: 'User already exists',
+                data: null,
+            })
+        }
+
+        const role = await this.rolesService.findOne({
+            id: createUserDto.roleId,
+        })
+
+        if (!role) {
+            return response.status(HttpStatus.NOT_FOUND).json({
+                status: 'ERROR',
+                message: 'Role not found',
                 data: null,
             })
         }
@@ -251,8 +287,8 @@ export class UsersController {
         }
 
         const updatedUser = await this.usersService.update({
-            user,
             updateUserDto,
+            user,
         })
 
         return response.status(HttpStatus.OK).json({
@@ -283,9 +319,7 @@ export class UsersController {
         @Param('id', ParseIntPipe) id: number,
         @Res() response: Response,
     ): Promise<Response> {
-        const user = await this.usersService.findOne({
-            id,
-        })
+        const user = await this.usersService.findOne({ id })
 
         if (user) {
             await this.usersService.remove({ user })
