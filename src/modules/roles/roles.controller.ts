@@ -24,7 +24,7 @@ export class RolesController {
     constructor(private readonly rolesService: RolesService) {}
 
     @Post()
-    async create(
+    public async create(
         @Body() createRoleDto: CreateRoleDto,
         @Res() response: Response,
     ): Promise<Response> {
@@ -32,13 +32,13 @@ export class RolesController {
 
         return response.status(HttpStatus.CREATED).json({
             status: 'OK',
-            message: 'Role created',
+            message: 'Rol creado',
             data: newRole,
         })
     }
 
     @Get()
-    async findAll(
+    public async findAll(
         @Query() query: GetRoleDto,
         @Res() response: Response,
     ): Promise<Response> {
@@ -46,13 +46,13 @@ export class RolesController {
 
         return response.status(HttpStatus.OK).json({
             status: 'OK',
-            message: 'Roles found',
+            message: 'Roles obtenidos correctamente',
             data: roles,
         })
     }
 
     @Get(':id')
-    async findOne(
+    public async findOne(
         @Param('id', ParseIntPipe) id: number,
         @Res() response: Response,
     ): Promise<Response> {
@@ -63,20 +63,20 @@ export class RolesController {
         if (!role) {
             return response.status(HttpStatus.NOT_FOUND).json({
                 status: 'ERROR',
-                message: 'Role not found',
+                message: 'Rol no encontrado',
                 data: null,
             })
         }
 
         return response.status(HttpStatus.OK).json({
             status: 'OK',
-            message: 'Role found',
+            message: 'Rol encontrado',
             data: role,
         })
     }
 
     @Patch(':id')
-    async update(
+    public async update(
         @Param('id', ParseIntPipe) id: number,
         @Body() updateRoleDto: UpdateRoleDto,
         @Res() response: Response,
@@ -88,7 +88,7 @@ export class RolesController {
         if (!role) {
             return response.status(HttpStatus.NOT_FOUND).json({
                 status: 'ERROR',
-                message: 'Role not found',
+                message: 'Rol no encontrado',
                 data: null,
             })
         }
@@ -100,13 +100,13 @@ export class RolesController {
 
         return response.status(HttpStatus.OK).json({
             status: 'OK',
-            message: 'Role updated',
+            message: 'Rol actualizado',
             data: updatedRole,
         })
     }
 
     @Delete(':id')
-    async remove(
+    public async remove(
         @Param('id', ParseIntPipe) id: number,
         @Res() response: Response,
     ): Promise<Response> {
@@ -120,7 +120,7 @@ export class RolesController {
 
         return response.status(HttpStatus.OK).json({
             status: 'OK',
-            message: 'Role removed',
+            message: 'Rol activado/desactivado',
             data: null,
         })
     }

@@ -12,13 +12,13 @@ export class RolesService {
         @InjectRepository(Role) private roleRepository: Repository<Role>,
     ) {}
 
-    async create({ createRoleDto }: { createRoleDto: CreateRoleDto }) {
+    public async create({ createRoleDto }: { createRoleDto: CreateRoleDto }) {
         const newRole = this.roleRepository.create(createRoleDto)
 
         return await this.roleRepository.save(newRole)
     }
 
-    async findAll({ qs }: { qs: GetRoleDto }) {
+    public async findAll({ qs }: { qs: GetRoleDto }) {
         const { page, limit } = qs
 
         return await this.roleRepository.find({
@@ -28,11 +28,11 @@ export class RolesService {
         })
     }
 
-    async findOne({ by }: { by: { id?: number; name?: string } }) {
+    public async findOne({ by }: { by: { id?: number; name?: string } }) {
         return await this.roleRepository.findOne({ where: by })
     }
 
-    async update({
+    public async update({
         role,
         updateRoleDto,
     }: {
@@ -43,7 +43,7 @@ export class RolesService {
         return await this.roleRepository.save(roleUpdated)
     }
 
-    async remove({ role }: { role: Role }) {
+    public async remove({ role }: { role: Role }) {
         const roleDeleted = this.roleRepository.merge(role, {
             active: !role.active,
         })

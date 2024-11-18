@@ -18,7 +18,7 @@ export class UsersService {
         this.fields = ['id', 'email', 'username', 'name', 'lastname', 'active']
     }
 
-    async create({
+    public async create({
         createUserDto: { password: user_pass, ...userData },
     }: {
         createUserDto: CreateUserDto
@@ -36,7 +36,7 @@ export class UsersService {
         return user
     }
 
-    async findAll({ qs }: { qs: GetUsersDto }) {
+    public async findAll({ qs }: { qs: GetUsersDto }) {
         const { page, limit } = qs
 
         return await this.userRepository.find({
@@ -48,7 +48,7 @@ export class UsersService {
         })
     }
 
-    async findOne({
+    public async findOne({
         by = {},
         relations = ['role'],
         options = { includePassword: false },
@@ -74,7 +74,7 @@ export class UsersService {
         })
     }
 
-    async update({
+    public async update({
         user,
         updateUserDto,
     }: {
@@ -89,7 +89,7 @@ export class UsersService {
         return _user
     }
 
-    async remove({ user }: { user: User }) {
+    public async remove({ user }: { user: User }) {
         const userDeleted = this.userRepository.merge(user, {
             active: !user.active,
         })

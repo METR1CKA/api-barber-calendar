@@ -32,7 +32,7 @@ export class UsersController {
     @ApiBody({ type: CreateUserDto })
     @ApiResponse({
         status: HttpStatus.CREATED,
-        description: 'User created',
+        description: 'Usuario creado',
         content: {
             'application/json': {
                 schema: {
@@ -58,7 +58,7 @@ export class UsersController {
     })
     @ApiResponse({
         status: HttpStatus.BAD_REQUEST,
-        description: 'User already exists',
+        description: 'Ya existe un usuario con este correo',
         content: {
             'application/json': {
                 schema: {
@@ -74,7 +74,7 @@ export class UsersController {
     })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
-        description: 'Role not found',
+        description: 'Rol no encontrado',
         content: {
             'application/json': {
                 schema: {
@@ -88,7 +88,7 @@ export class UsersController {
             },
         },
     })
-    async create(
+    public async create(
         @Body() createUserDto: CreateUserDto,
         @Res() response: Response,
     ): Promise<Response> {
@@ -102,7 +102,7 @@ export class UsersController {
         if (userExists) {
             return response.status(HttpStatus.BAD_REQUEST).json({
                 status: 'ERROR',
-                message: 'User already exists',
+                message: 'Ya existe un usuario con este correo',
                 data: null,
             })
         }
@@ -116,7 +116,7 @@ export class UsersController {
         if (!role) {
             return response.status(HttpStatus.NOT_FOUND).json({
                 status: 'ERROR',
-                message: 'Role not found',
+                message: 'Rol no encontrado',
                 data: null,
             })
         }
@@ -125,7 +125,7 @@ export class UsersController {
 
         return response.status(HttpStatus.CREATED).json({
             status: 'OK',
-            message: 'User created',
+            message: 'Usuario creado',
             data: newUser,
         })
     }
@@ -133,7 +133,7 @@ export class UsersController {
     @Get()
     @ApiResponse({
         status: HttpStatus.OK,
-        description: 'Users found',
+        description: 'Usuarios obtenidos correctamente',
         content: {
             'application/json': {
                 schema: {
@@ -158,7 +158,7 @@ export class UsersController {
             },
         },
     })
-    async findAll(
+    public async findAll(
         @Query() query: GetUsersDto,
         @Res() response: Response,
     ): Promise<Response> {
@@ -166,7 +166,7 @@ export class UsersController {
 
         return response.status(HttpStatus.OK).json({
             status: 'OK',
-            message: 'Users found',
+            message: 'Usuarios obtenidos correctamente',
             data: users,
         })
     }
@@ -174,7 +174,7 @@ export class UsersController {
     @Get(':id')
     @ApiResponse({
         status: HttpStatus.OK,
-        description: 'User found',
+        description: 'Usuario encontrado',
         content: {
             'application/json': {
                 schema: {
@@ -198,7 +198,7 @@ export class UsersController {
     })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
-        description: 'User not found',
+        description: 'Usuario no encontrado',
         content: {
             'application/json': {
                 schema: {
@@ -212,7 +212,7 @@ export class UsersController {
             },
         },
     })
-    async findOne(
+    public async findOne(
         @Param('id', ParseIntPipe) id: number,
         @Res() response: Response,
     ): Promise<Response> {
@@ -223,14 +223,14 @@ export class UsersController {
         if (!user) {
             return response.status(HttpStatus.NOT_FOUND).json({
                 status: 'ERROR',
-                message: 'User not found',
+                message: 'Usuario no encontrado',
                 data: null,
             })
         }
 
         return response.status(HttpStatus.OK).json({
             status: 'OK',
-            message: 'User found',
+            message: 'Usuario encontrado',
             data: user,
         })
     }
@@ -239,7 +239,7 @@ export class UsersController {
     @ApiBody({ type: UpdateUserDto })
     @ApiResponse({
         status: HttpStatus.OK,
-        description: 'User updated',
+        description: 'Usuario actualizado',
         content: {
             'application/json': {
                 schema: {
@@ -263,7 +263,7 @@ export class UsersController {
     })
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
-        description: 'User not found',
+        description: 'Usuario no encontrado',
         content: {
             'application/json': {
                 schema: {
@@ -277,7 +277,7 @@ export class UsersController {
             },
         },
     })
-    async update(
+    public async update(
         @Param('id', ParseIntPipe) id: number,
         @Body() updateUserDto: UpdateUserDto,
         @Res() response: Response,
@@ -289,7 +289,7 @@ export class UsersController {
         if (!user) {
             return response.status(HttpStatus.NOT_FOUND).json({
                 status: 'ERROR',
-                message: 'User not found',
+                message: 'Usuario no encontrado',
                 data: null,
             })
         }
@@ -304,7 +304,7 @@ export class UsersController {
             if (!role) {
                 return response.status(HttpStatus.NOT_FOUND).json({
                     status: 'ERROR',
-                    message: 'Role not found',
+                    message: 'Rol no encontrado',
                     data: null,
                 })
             }
@@ -317,7 +317,7 @@ export class UsersController {
 
         return response.status(HttpStatus.OK).json({
             status: 'OK',
-            message: 'User updated',
+            message: 'Usuario actualizado',
             data: updatedUser,
         })
     }
@@ -325,7 +325,7 @@ export class UsersController {
     @Delete(':id')
     @ApiResponse({
         status: HttpStatus.OK,
-        description: 'User removed',
+        description: 'Usuario activado/desactivado',
         content: {
             'application/json': {
                 schema: {
@@ -339,7 +339,7 @@ export class UsersController {
             },
         },
     })
-    async remove(
+    public async remove(
         @Param('id', ParseIntPipe) id: number,
         @Res() response: Response,
     ): Promise<Response> {
@@ -353,7 +353,7 @@ export class UsersController {
 
         return response.status(HttpStatus.OK).json({
             status: 'OK',
-            message: 'User removed',
+            message: 'User activado/desactivado',
             data: null,
         })
     }
