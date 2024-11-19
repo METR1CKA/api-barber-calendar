@@ -18,6 +18,14 @@ export class AuthService {
         this.type = 'Bearer'
     }
 
+    public async decodeToken({
+        token,
+    }: {
+        token: string
+    }): Promise<PayloadJWT> {
+        return await this.jwtService.decode(token)
+    }
+
     public async findToken({
         by,
     }: {

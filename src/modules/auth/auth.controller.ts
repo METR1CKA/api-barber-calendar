@@ -77,6 +77,22 @@ export class AuthController {
     @Post('logout')
     @UseGuards(AuthGuard)
     public async logout(@Req() request: Request, @Res() response: Response) {
+        const tokenString = request.headers.authorization?.replace(
+            'Bearer ',
+            '',
+        )
+
+        const payload = await this.authService.decodeToken({
+            token: tokenString,
+        })
+
+        await this.authService.revokeToken({
+            by: {
+                userId: payload.id,
+                token: tokenString,
+            },
+        })
+
         return response.status(HttpStatus.OK).json({
             status: 'OK',
             message: 'Cierre de sesión exitoso',
@@ -87,9 +103,19 @@ export class AuthController {
     @Get('me')
     @UseGuards(AuthGuard)
     public async me(@Req() request: Request, @Res() response: Response) {
+        const tokenString = request.headers.authorization?.replace(
+            'Bearer ',
+            '',
+        )
+
+        const payload = await this.authService.decodeToken({
+            token: tokenString,
+        })
+
         const user = await this.userService.findOne({
             by: {
-                email: request['payload'].email,
+                email: payload.email,
+                id: payload.id,
             },
         })
 

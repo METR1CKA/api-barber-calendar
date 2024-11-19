@@ -10,13 +10,14 @@ import { AuthModule } from './modules/auth/auth.module'
 import { AppController } from './app.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { JwtModule } from '@nestjs/jwt'
-import env from 'config/env'
+import env from 'config/env.config'
 
 @Module({
     imports: [
         ConfigModule.forRoot({
-            isGlobal: true,
+            expandVariables: true,
             envFilePath: '.env',
+            isGlobal: true,
             load: [env],
         }),
         TypeOrmModule.forRootAsync({
