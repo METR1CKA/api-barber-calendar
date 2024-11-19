@@ -42,14 +42,14 @@ export class AuthGuard implements CanActivate {
             })
 
             if (!existToken) {
-                throw new Error()
+                throw new Error('Token no válido')
             }
 
             request['payload'] = payload
-        } catch {
+        } catch (error) {
             throw new UnauthorizedException({
                 status: 'ERROR',
-                message: 'Token no válido',
+                message: error.message,
                 data: null,
             })
         }
