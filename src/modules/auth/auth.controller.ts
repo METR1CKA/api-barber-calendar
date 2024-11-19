@@ -57,7 +57,7 @@ export class AuthController {
 
         const tokenJwt = await this.authService.generateToken({
             payload: {
-                id: user.id,
+                sub: user.id,
                 email: user.email,
                 role: user.role.name,
             },
@@ -88,7 +88,7 @@ export class AuthController {
 
         await this.authService.revokeToken({
             by: {
-                userId: payload.id,
+                userId: payload.sub,
                 token: tokenString,
             },
         })
@@ -115,7 +115,7 @@ export class AuthController {
         const user = await this.userService.findOne({
             by: {
                 email: payload.email,
-                id: payload.id,
+                id: payload.sub,
             },
         })
 

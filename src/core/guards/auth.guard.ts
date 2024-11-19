@@ -7,6 +7,7 @@ import {
 import { AuthService } from 'src/modules/auth/auth.service'
 import { JwtService, TokenExpiredError } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
+import { PayloadJWT } from 'src/shared/types/jwt.type'
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -32,12 +33,15 @@ export class AuthGuard implements CanActivate {
         }
 
         try {
-            const payload = await this.jwtService.verifyAsync(tokenJwt, {
-                secret: this.configService.get<string>('API_JWT_SECRET'),
-            })
+            const payload: PayloadJWT = await this.jwtService.verifyAsync(
+                tokenJwt,
+                {
+                    secret: this.configService.get<string>('API_JWT_SECRET'),
+                },
+            )
 
             const existToken = await this.authService.findToken({
-                by: { userId: payload.id, token: tokenJwt },
+                by: { userId: payload.sub, token: tokenJwt },
             })
 
             if (!existToken) {

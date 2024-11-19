@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 export type PayloadJWT = {
     email: string
     role: string
-    id: number
+    sub: number
     iat?: number
     exp?: number
 }
