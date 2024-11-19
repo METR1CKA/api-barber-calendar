@@ -1,11 +1,10 @@
 import { FormatDateTime } from 'src/shared/utils/luxon-datetime'
-import { PayloadJWT } from 'src/shared/types/jwt-payload.type'
 import { ApiJwtToken } from './entities/api-jwt-token.entity'
-import { Hash } from 'src/shared/utils/bcrypt-hash'
+import { PayloadJWT, TokenJWT } from 'src/shared/types/jwt.type'
 import { InjectRepository } from '@nestjs/typeorm'
+import { DeleteResult, Repository } from 'typeorm'
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { Repository } from 'typeorm'
 
 @Injectable()
 export class AuthService {
@@ -22,8 +21,8 @@ export class AuthService {
     public async findToken({
         by,
     }: {
-        by: { userId: number; token?: string }
-    }): Promise<ApiJwtToken> {
+        by: { userId?: number; token?: string }
+    }): Promise<ApiJwtToken | null> {
         return await this.apiJwtTokenRepository.findOne({
             where: by,
         })
@@ -33,21 +32,41 @@ export class AuthService {
         payload,
     }: {
         payload: PayloadJWT
-    }): Promise<any> {
-        const existToken = await this.findToken({ by: { userId: payload.id } })
+    }): Promise<string> {
+        return await this.jwtService.signAsync(payload)
+    }
+
+    public async revokeToken({
+        by,
+    }: {
+        by: {
+            id?: number
+            userId?: number
+            token?: string
+        }
+    }): Promise<DeleteResult> {
+        return await this.apiJwtTokenRepository.delete(by)
+    }
+
+    public async saveToken({
+        tokenString,
+    }: {
+        tokenString: string
+    }): Promise<TokenJWT> {
+        const { id, iat, exp }: { id: number; iat: number; exp: number } =
+            this.jwtService.decode(tokenString)
+
+        const existToken = await this.findToken({ by: { userId: id } })
 
         if (existToken) {
-            await this.apiJwtTokenRepository.delete(existToken.id)
+            await this.revokeToken({
+                by: { id: existToken.id, userId: id, token: tokenString },
+            })
         }
-
-        const tokenString = await this.jwtService.signAsync(payload)
-
-        const { iat, exp }: { iat: number; exp: number } =
-            this.jwtService.decode(tokenString)
 
         const tokenRepo = this.apiJwtTokenRepository.create({
             token: tokenString,
-            userId: payload.id,
+            userId: id,
             type: this.type,
             ...FormatDateTime.jwtTimestamp({ iat, exp }),
         })
@@ -58,9 +77,5 @@ export class AuthService {
             token: tokenString,
             ...FormatDateTime.jwtTimestamp({ iat, exp, toFormat: true }),
         }
-    }
-
-    public decodeToken({ token }: { token: string }) {
-        return this.jwtService.decode(token)
     }
 }

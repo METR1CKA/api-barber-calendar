@@ -5,9 +5,8 @@ import {
     UnauthorizedException,
 } from '@nestjs/common'
 import { AuthService } from 'src/modules/auth/auth.service'
-import { Hash } from 'src/shared/utils/bcrypt-hash'
+import { JwtService, TokenExpiredError } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
-import { JwtService } from '@nestjs/jwt'
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -47,6 +46,14 @@ export class AuthGuard implements CanActivate {
 
             request['payload'] = payload
         } catch (error) {
+            if (error instanceof TokenExpiredError) {
+                await this.authService.revokeToken({
+                    by: {
+                        token: tokenJwt,
+                    },
+                })
+            }
+
             throw new UnauthorizedException({
                 status: 'ERROR',
                 message: error.message,

@@ -55,7 +55,7 @@ export class AuthController {
             })
         }
 
-        const token = await this.authService.generateToken({
+        const tokenJwt = await this.authService.generateToken({
             payload: {
                 id: user.id,
                 email: user.email,
@@ -63,20 +63,20 @@ export class AuthController {
             },
         })
 
+        const authJwt = await this.authService.saveToken({
+            tokenString: tokenJwt,
+        })
+
         return response.status(HttpStatus.OK).json({
             status: 'OK',
             message: 'Inicio de sesión exitoso',
-            data: token,
+            data: authJwt,
         })
     }
 
     @Post('logout')
     @UseGuards(AuthGuard)
     public async logout(@Req() request: Request, @Res() response: Response) {
-        const token = request.headers.authorization?.replace('Bearer ', '')
-
-        const payload = this.authService.decodeToken({ token })
-
         return response.status(HttpStatus.OK).json({
             status: 'OK',
             message: 'Cierre de sesión exitoso',
