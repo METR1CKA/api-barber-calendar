@@ -3,9 +3,9 @@ import { UpdateUserDto } from 'src/modules/users/dto/update-user.dto'
 import { GetUsersDto } from 'src/modules/users/dto/get-users.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Hash } from 'src/shared/utils/bcrypt-hash'
+import { User } from './entities/user.entity'
 import { Injectable } from '@nestjs/common'
 import { Repository } from 'typeorm'
-import { User } from './entities/user.entity'
 
 @Injectable()
 export class UsersService {

@@ -1,28 +1,66 @@
-import { PayloadJWT } from 'src/shared/interfaces/jwt-payload.interface'
+import { FormatDateTime } from 'src/shared/utils/luxon-datetime'
+import { PayloadJWT } from 'src/shared/types/jwt-payload.type'
+import { ApiJwtToken } from './entities/api-jwt-token.entity'
+import { Hash } from 'src/shared/utils/bcrypt-hash'
+import { InjectRepository } from '@nestjs/typeorm'
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
+import { Repository } from 'typeorm'
 
 @Injectable()
 export class AuthService {
-    constructor(private readonly jwtService: JwtService) {}
+    private type: string
+
+    constructor(
+        @InjectRepository(ApiJwtToken)
+        private readonly apiJwtTokenRepository: Repository<ApiJwtToken>,
+        private readonly jwtService: JwtService,
+    ) {
+        this.type = 'Bearer'
+    }
+
+    public async findToken({
+        by,
+    }: {
+        by: { userId: number; token?: string }
+    }): Promise<ApiJwtToken> {
+        return await this.apiJwtTokenRepository.findOne({
+            where: by,
+        })
+    }
 
     public async generateToken({
         payload,
     }: {
         payload: PayloadJWT
-    }): Promise<string> {
-        return await this.jwtService.signAsync(payload)
+    }): Promise<any> {
+        const existToken = await this.findToken({ by: { userId: payload.id } })
+
+        if (existToken) {
+            await this.apiJwtTokenRepository.delete(existToken.id)
+        }
+
+        const tokenString = await this.jwtService.signAsync(payload)
+
+        const { iat, exp }: { iat: number; exp: number } =
+            this.jwtService.decode(tokenString)
+
+        const tokenRepo = this.apiJwtTokenRepository.create({
+            token: tokenString,
+            userId: payload.id,
+            type: this.type,
+            ...FormatDateTime.jwtTimestamp({ iat, exp }),
+        })
+
+        await this.apiJwtTokenRepository.save(tokenRepo)
+
+        return {
+            token: tokenString,
+            ...FormatDateTime.jwtTimestamp({ iat, exp, toFormat: true }),
+        }
     }
 
-    public async validateToken({
-        token,
-    }: {
-        token: string
-    }): Promise<Record<string, any>> {
-        return await this.jwtService.verifyAsync(token)
-    }
-
-    public check({ token }: { token: string }) {
+    public decodeToken({ token }: { token: string }) {
         return this.jwtService.decode(token)
     }
 }

@@ -1,4 +1,5 @@
 import { TimezoneMiddleware } from './core/middleware/timezone.middleware'
+import { ApiJwtToken } from './modules/auth/entities/api-jwt-token.entity'
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { User } from './modules/users/entities/user.entity'
@@ -28,7 +29,7 @@ import env from 'config/env'
                 username: configService.get<string>('env.DB_USER'),
                 password: configService.get<string>('env.DB_PASSWORD'),
                 database: configService.get<string>('env.DB_DB_NAME'),
-                entities: [User, Role],
+                entities: [User, Role, ApiJwtToken],
                 synchronize: configService.get<boolean>('env.SYNC_DB'),
             }),
         }),

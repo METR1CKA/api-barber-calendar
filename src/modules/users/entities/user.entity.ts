@@ -1,6 +1,7 @@
+import { ApiJwtToken } from 'src/modules/auth/entities/api-jwt-token.entity'
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
 import { Role } from 'src/modules/roles/entities/role.entity'
 import { ApiProperty, ApiSchema } from '@nestjs/swagger'
-import { Column, Entity, ManyToOne } from 'typeorm'
 
 @ApiSchema({ name: 'User' })
 @Entity({
@@ -148,4 +149,7 @@ export class User {
         eager: true,
     })
     public role: Role
+
+    @OneToMany(() => ApiJwtToken, (token) => token.user)
+    public tokens: ApiJwtToken[]
 }

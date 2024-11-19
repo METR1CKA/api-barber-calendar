@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable, NestMiddleware } from '@nestjs/common'
-import { Request, Response, NextFunction } from 'express'
 import { FormatDateTime } from 'src/shared/utils/luxon-datetime'
+import { Request, Response, NextFunction } from 'express'
 
 @Injectable()
 export class TimezoneMiddleware implements NestMiddleware {
@@ -8,8 +8,8 @@ export class TimezoneMiddleware implements NestMiddleware {
         const timezone = req.headers['timezone']
 
         if (timezone) {
-            const zone = FormatDateTime.isValidZone({
-                zone: timezone as string,
+            const zone = FormatDateTime.isValid({
+                timezone: timezone as string,
             })
 
             if (!zone.isValid) {

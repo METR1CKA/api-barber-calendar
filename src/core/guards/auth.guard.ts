@@ -4,14 +4,17 @@ import {
     Injectable,
     UnauthorizedException,
 } from '@nestjs/common'
+import { AuthService } from 'src/modules/auth/auth.service'
+import { Hash } from 'src/shared/utils/bcrypt-hash'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 
 @Injectable()
 export class AuthGuard implements CanActivate {
     constructor(
-        private jwtService: JwtService,
         private configService: ConfigService,
+        private authService: AuthService,
+        private jwtService: JwtService,
     ) {}
 
     public async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -30,13 +33,23 @@ export class AuthGuard implements CanActivate {
         }
 
         try {
-            request['payload'] = await this.jwtService.verifyAsync(tokenJwt, {
+            const payload = await this.jwtService.verifyAsync(tokenJwt, {
                 secret: this.configService.get<string>('API_JWT_SECRET'),
             })
+
+            const existToken = await this.authService.findToken({
+                by: { userId: payload.id, token: tokenJwt },
+            })
+
+            if (!existToken) {
+                throw new Error()
+            }
+
+            request['payload'] = payload
         } catch {
             throw new UnauthorizedException({
                 status: 'ERROR',
-                message: 'No autorizado',
+                message: 'Token no válido',
                 data: null,
             })
         }

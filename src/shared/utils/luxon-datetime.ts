@@ -17,17 +17,6 @@ export class FormatDateTime {
         return this.shortFormat
     }
 
-    public static isValidZone({ zone }: { zone: string }) {
-        const { isValid, invalidReason, invalidExplanation } =
-            DateTime.now().setZone(zone)
-
-        return {
-            isValid,
-            invalidReason,
-            invalidExplanation,
-        }
-    }
-
     public static setLocalZone({
         zone = 'America/Monterrey',
     }: {
@@ -56,35 +45,44 @@ export class FormatDateTime {
         return DateTime.now().setZone(this.localZone)
     }
 
-    public static isValidDateTime({
-        date,
-        format,
+    public static isValid({
+        timezone,
+        datetime,
     }: {
-        date: string
-        format: string
+        timezone?: string
+        datetime?: { date: string; format: string }
     }) {
-        const { isValid, invalidReason } = DateTime.fromFormat(
-            date,
-            format,
-        ).setZone(this.localZone)
+        const datetimeObject = datetime
+            ? DateTime.fromFormat(datetime.date, datetime.format)
+            : DateTime.now()
+
+        const { isValid, invalidReason, invalidExplanation } =
+            datetimeObject.setZone(timezone ?? this.localZone)
 
         return {
             isValid,
             invalidReason,
+            invalidExplanation,
         }
     }
 
-    public static getConvertedTimestampToDateTime({
-        timestamp,
-        format,
-        zone,
+    public static jwtTimestamp({
+        iat,
+        exp,
+        toFormat = false,
     }: {
-        timestamp: number
-        format?: string
-        zone?: string
+        iat: number
+        exp: number
+        toFormat?: boolean
     }) {
-        return DateTime.fromSeconds(timestamp)
-            .setZone(zone ?? this.localZone)
-            .toFormat(format ?? this.fullFormat)
+        const issuedAt = DateTime.fromSeconds(iat).setZone(this.localZone)
+        const expiresAt = DateTime.fromSeconds(exp).setZone(this.localZone)
+
+        return {
+            issuedAt: toFormat ? issuedAt.toFormat(this.fullFormat) : issuedAt,
+            expiresAt: toFormat
+                ? expiresAt.toFormat(this.fullFormat)
+                : expiresAt,
+        }
     }
 }

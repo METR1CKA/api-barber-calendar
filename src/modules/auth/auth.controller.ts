@@ -8,7 +8,6 @@ import {
     Res,
     UseGuards,
 } from '@nestjs/common'
-import { FormatDateTime } from 'src/shared/utils/luxon-datetime'
 import { LoginDto } from 'src/modules/auth/dto/login.dto'
 import { AuthGuard } from 'src/core/guards/auth.guard'
 import { UsersService } from '../users/users.service'
@@ -64,25 +63,26 @@ export class AuthController {
             },
         })
 
-        const { iat, exp } = await this.authService.validateToken({ token })
-
         return response.status(HttpStatus.OK).json({
             status: 'OK',
             message: 'Inicio de sesión exitoso',
-            data: {
-                token,
-                issuedAt: FormatDateTime.getConvertedTimestampToDateTime({
-                    timestamp: iat,
-                }),
-                expiresAt: FormatDateTime.getConvertedTimestampToDateTime({
-                    timestamp: exp,
-                }),
-            },
+            data: token,
         })
     }
 
     @Post('logout')
-    public async logout(@Res() response: Response) {}
+    @UseGuards(AuthGuard)
+    public async logout(@Req() request: Request, @Res() response: Response) {
+        const token = request.headers.authorization?.replace('Bearer ', '')
+
+        const payload = this.authService.decodeToken({ token })
+
+        return response.status(HttpStatus.OK).json({
+            status: 'OK',
+            message: 'Cierre de sesión exitoso',
+            data: null,
+        })
+    }
 
     @Get('me')
     @UseGuards(AuthGuard)
