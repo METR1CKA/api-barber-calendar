@@ -4,6 +4,7 @@ import { Logger, ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
+import { SeederService } from './database/seeders/seeder.service'
 
 async function bootstrap() {
     // Build App
@@ -28,6 +29,10 @@ async function bootstrap() {
     )
 
     app.useGlobalFilters(new NotFoundExceptionFilter())
+
+    // Seeders
+    const seeders = app.get(SeederService)
+    await seeders.seed()
 
     // Swagger
     const document = new DocumentBuilder()

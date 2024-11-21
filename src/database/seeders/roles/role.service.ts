@@ -1,4 +1,4 @@
-import { Role } from '../../../modules/roles/entities/role.entity'
+import { Role, RoleEnum } from '../../../modules/roles/entities/role.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { BaseSeederService } from '../base.seeder'
 import { DeepPartial, Repository } from 'typeorm'
@@ -18,7 +18,14 @@ export class RoleService extends BaseSeederService<Role> {
     }
 
     protected get data(): Promise<DeepPartial<Role>[]> {
-        return Promise.resolve([])
+        const valuesEnum = Object.values(RoleEnum)
+
+        return Promise.resolve(
+            valuesEnum.map((value) => ({
+                name: value,
+                description: value.toLowerCase(),
+            })),
+        )
     }
 
     protected getIdentity(entity: DeepPartial<Role>) {

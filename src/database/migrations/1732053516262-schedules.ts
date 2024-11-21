@@ -86,7 +86,7 @@ export class Schedules1732053516262 implements MigrationInterface {
             this.tableName,
             new TableIndex({
                 columnNames: ['user_barber_id'],
-                name: 'IDX_USER_BARBER_ID',
+                name: 'IDX_SCHEDULES_USER_BARBER_ID',
             }),
         )
 

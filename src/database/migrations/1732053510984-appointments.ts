@@ -8,7 +8,7 @@ import {
 } from 'typeorm'
 
 export class Appoiments1732053510984 implements MigrationInterface {
-    public tableName = 'appoiments'
+    public tableName = 'appointments'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
@@ -103,7 +103,7 @@ export class Appoiments1732053510984 implements MigrationInterface {
             this.tableName,
             new TableIndex({
                 columnNames: ['user_barber_id'],
-                name: 'IDX_USER_BARBER_ID',
+                name: 'IDX_APPOINTMENTS_USER_BARBER_ID',
             }),
         )
 
