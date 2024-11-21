@@ -10,7 +10,9 @@ import {
     HttpStatus,
     Query,
     ParseIntPipe,
+    UseGuards,
 } from '@nestjs/common'
+import { AuthGuard } from '../../core/guards/auth.guard'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
 import { GetRoleDto } from './dto/get-roles.dto'
@@ -24,6 +26,7 @@ export class RolesController {
     constructor(private readonly rolesService: RolesService) {}
 
     @Post()
+    @UseGuards(AuthGuard)
     public async create(
         @Body() createRoleDto: CreateRoleDto,
         @Res() response: Response,
@@ -38,6 +41,7 @@ export class RolesController {
     }
 
     @Get()
+    @UseGuards(AuthGuard)
     public async findAll(
         @Query() query: GetRoleDto,
         @Res() response: Response,
@@ -52,6 +56,7 @@ export class RolesController {
     }
 
     @Get(':id')
+    @UseGuards(AuthGuard)
     public async findOne(
         @Param('id', ParseIntPipe) id: number,
         @Res() response: Response,
@@ -76,6 +81,7 @@ export class RolesController {
     }
 
     @Patch(':id')
+    @UseGuards(AuthGuard)
     public async update(
         @Param('id', ParseIntPipe) id: number,
         @Body() updateRoleDto: UpdateRoleDto,
@@ -106,6 +112,7 @@ export class RolesController {
     }
 
     @Delete(':id')
+    @UseGuards(AuthGuard)
     public async remove(
         @Param('id', ParseIntPipe) id: number,
         @Res() response: Response,

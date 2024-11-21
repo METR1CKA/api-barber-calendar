@@ -10,8 +10,10 @@ import {
     Res,
     Query,
     ParseIntPipe,
+    UseGuards,
 } from '@nestjs/common'
 import { ApiBody, ApiResponse } from '@nestjs/swagger'
+import { AuthGuard } from 'src/core/guards/auth.guard'
 import { RolesService } from '../roles/roles.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -29,6 +31,7 @@ export class UsersController {
     ) {}
 
     @Post()
+    @UseGuards(AuthGuard)
     @ApiBody({ type: CreateUserDto })
     @ApiResponse({
         status: HttpStatus.CREATED,
@@ -131,6 +134,7 @@ export class UsersController {
     }
 
     @Get()
+    @UseGuards(AuthGuard)
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Usuarios obtenidos correctamente',
@@ -172,6 +176,7 @@ export class UsersController {
     }
 
     @Get(':id')
+    @UseGuards(AuthGuard)
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Usuario encontrado',
@@ -236,6 +241,7 @@ export class UsersController {
     }
 
     @Patch(':id')
+    @UseGuards(AuthGuard)
     @ApiBody({ type: UpdateUserDto })
     @ApiResponse({
         status: HttpStatus.OK,
@@ -323,6 +329,7 @@ export class UsersController {
     }
 
     @Delete(':id')
+    @UseGuards(AuthGuard)
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Usuario activado/desactivado',
