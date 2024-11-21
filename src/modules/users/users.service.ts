@@ -27,7 +27,7 @@ export class UsersService {
             password: await bcrypt.hash(user_pass, 10),
         })
 
-        const { password, roleId, ...user } =
+        const { password, role_id, ...user } =
             await this.userRepository.save(newUser)
 
         return user
@@ -80,7 +80,7 @@ export class UsersService {
     }) {
         const userUpdated = this.userRepository.merge(user, updateUserDto)
 
-        const { password, roleId, ..._user } =
+        const { password, role_id, ..._user } =
             await this.userRepository.save(userUpdated)
 
         return _user
@@ -91,7 +91,7 @@ export class UsersService {
             active: !user.active,
         })
 
-        const { password, roleId, ..._user } =
+        const { password, role_id, ..._user } =
             await this.userRepository.save(userDeleted)
 
         return _user

@@ -109,7 +109,7 @@ export class UsersController {
 
         const role = await this.rolesService.findOne({
             by: {
-                id: createUserDto.roleId,
+                id: createUserDto.role_id,
             },
         })
 
@@ -294,10 +294,10 @@ export class UsersController {
             })
         }
 
-        if (updateUserDto.roleId) {
+        if (updateUserDto.role_id) {
             const role = await this.rolesService.findOne({
                 by: {
-                    id: updateUserDto.roleId,
+                    id: updateUserDto.role_id,
                 },
             })
 

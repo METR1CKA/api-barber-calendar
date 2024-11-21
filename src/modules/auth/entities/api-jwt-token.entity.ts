@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 import { User } from '../../users/entities/user.entity'
 import { DateTime } from 'luxon'
 
@@ -9,8 +9,10 @@ export class ApiJwtToken {
     @PrimaryColumn()
     public id: number
 
-    @Column()
-    public userId: number
+    @Column({
+        nullable: true,
+    })
+    public user_id: number
 
     @Column()
     public token: string
@@ -18,14 +20,23 @@ export class ApiJwtToken {
     @Column()
     public type: string
 
-    @Column()
-    public issuedAt: DateTime
+    @Column({
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP',
+    })
+    public issued_at: DateTime
 
-    @Column()
-    public expiresAt: DateTime
+    @Column({
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP',
+    })
+    public expires_at: Date
 
     @ManyToOne(() => User, (user) => user.tokens, {
         eager: true,
+    })
+    @JoinColumn({
+        name: 'user_id',
     })
     public user: User
 }

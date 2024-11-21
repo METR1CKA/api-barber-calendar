@@ -2,7 +2,7 @@ import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
 import { InjectRepository } from '@nestjs/typeorm'
 import { GetRoleDto } from './dto/get-roles.dto'
-import { Role } from './entities/role.entity'
+import { Role, ROLES } from './entities/role.entity'
 import { Injectable } from '@nestjs/common'
 import { Repository } from 'typeorm'
 
@@ -28,7 +28,7 @@ export class RolesService {
         })
     }
 
-    public async findOne({ by }: { by: { id?: number; name?: string } }) {
+    public async findOne({ by }: { by: { id?: number; name?: ROLES } }) {
         return await this.roleRepository.findOne({ where: by })
     }
 

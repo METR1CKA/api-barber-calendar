@@ -1,4 +1,11 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm'
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+    PrimaryColumn,
+} from 'typeorm'
 import { ApiJwtToken } from '../../auth/entities/api-jwt-token.entity'
 import { ApiProperty, ApiSchema } from '@nestjs/swagger'
 import { Role } from '../../roles/entities/role.entity'
@@ -23,8 +30,10 @@ export class User {
         type: 'integer',
         title: 'roleId',
     })
-    @Column()
-    public roleId: number
+    @Column({
+        nullable: true,
+    })
+    public role_id: number
 
     @ApiProperty({
         description: 'Email del usuario',
@@ -81,7 +90,9 @@ export class User {
         title: 'active',
         required: true,
     })
-    @Column()
+    @Column({
+        default: true,
+    })
     public active: boolean
 
     @ApiProperty({
@@ -92,6 +103,9 @@ export class User {
     })
     @ManyToOne(() => Role, (role) => role.users, {
         eager: true,
+    })
+    @JoinColumn({
+        name: 'role_id',
     })
     public role: Role
 

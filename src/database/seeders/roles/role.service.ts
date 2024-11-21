@@ -1,27 +1,27 @@
-import { User } from '../../../modules/users/entities/user.entity'
+import { Role } from '../../../modules/roles/entities/role.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { BaseSeederService } from '../base.seeder'
 import { DeepPartial, Repository } from 'typeorm'
 import { Injectable } from '@nestjs/common'
 
 @Injectable()
-export class RoleService extends BaseSeederService<User> {
+export class RoleService extends BaseSeederService<Role> {
     constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
+        @InjectRepository(Role)
+        private readonly roleRepository: Repository<Role>,
     ) {
         super()
     }
 
-    protected get repository(): Repository<User> {
-        return this.userRepository
+    protected get repository(): Repository<Role> {
+        return this.roleRepository
     }
 
-    protected get data(): Promise<DeepPartial<User>[]> {
-        return
+    protected get data(): Promise<DeepPartial<Role>[]> {
+        return Promise.resolve([])
     }
 
-    protected getIdentity(entity: DeepPartial<User>) {
-        return entity.email
+    protected getIdentity(entity: DeepPartial<Role>) {
+        return entity.name
     }
 }

@@ -15,8 +15,6 @@ export class CreateUserDto {
         description: 'Email del usuario',
         example: 'user@mail.com',
         required: true,
-        format: 'email',
-        nullable: false,
         type: 'string',
         title: 'email',
     })
@@ -39,10 +37,8 @@ export class CreateUserDto {
 
     @ApiProperty({
         description: 'Username del usuario',
-        example: 'username',
+        example: 'FulanoUser123',
         required: true,
-        format: 'string',
-        nullable: false,
         type: 'string',
         title: 'username',
     })
@@ -59,10 +55,7 @@ export class CreateUserDto {
 
     @ApiProperty({
         description: 'Contraseña del usuario',
-        example: 'password',
         required: true,
-        format: 'string',
-        nullable: false,
         type: 'string',
         title: 'password',
     })
@@ -83,10 +76,8 @@ export class CreateUserDto {
 
     @ApiProperty({
         description: 'Nombre',
-        example: 'name',
+        example: 'Fernando',
         required: true,
-        format: 'string',
-        nullable: false,
         type: 'string',
         title: 'name',
     })
@@ -103,10 +94,8 @@ export class CreateUserDto {
 
     @ApiProperty({
         description: 'Apellido',
-        example: 'lastname',
+        example: 'Ortiz',
         required: true,
-        format: 'string',
-        nullable: false,
         type: 'string',
         title: 'lastname',
     })
@@ -123,10 +112,7 @@ export class CreateUserDto {
 
     @ApiProperty({
         description: 'Rol del usuario',
-        example: 1,
         required: true,
-        format: 'number',
-        nullable: false,
         type: 'number',
         title: 'role_id',
     })
@@ -142,5 +128,5 @@ export class CreateUserDto {
     @IsPositive({
         message: 'El rol debe ser un numero positivo',
     })
-    public roleId: number
+    public role_id: number
 }

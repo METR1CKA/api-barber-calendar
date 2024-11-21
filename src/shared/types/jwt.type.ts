@@ -9,7 +9,7 @@ export type PayloadJWT = {
 }
 
 export type TokenJWT = {
-    expiresAt: string | DateTime<boolean>
-    issuedAt: string | DateTime<boolean>
+    expires_at: string | DateTime<boolean>
+    issued_at: string | DateTime<boolean>
     token: string
 }

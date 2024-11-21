@@ -2,6 +2,15 @@ import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm'
 import { ApiProperty, ApiSchema } from '@nestjs/swagger'
 import { User } from '../../users/entities/user.entity'
 
+export enum RoleEnum {
+    DEV = 'DEV',
+    ADMIN = 'ADMIN',
+    BARBER = 'BARBER',
+    CLIENT = 'CLIENT',
+}
+
+export type ROLES = keyof typeof RoleEnum
+
 @ApiSchema({ name: 'Role' })
 @Entity({
     name: 'roles',
@@ -23,8 +32,12 @@ export class Role {
         type: 'string',
         title: 'name',
     })
-    @Column()
-    public name: string
+    @Column({
+        enum: RoleEnum,
+        type: 'enum',
+        unique: true,
+    })
+    public name: ROLES
 
     @ApiProperty({
         description: 'Descripción del rol',

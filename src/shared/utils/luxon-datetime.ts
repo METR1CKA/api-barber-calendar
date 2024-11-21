@@ -79,8 +79,8 @@ export class FormatDateTime {
         const expiresAt = DateTime.fromSeconds(exp).setZone(this.localZone)
 
         return {
-            issuedAt: toFormat ? issuedAt.toFormat(this.fullFormat) : issuedAt,
-            expiresAt: toFormat
+            issued_at: toFormat ? issuedAt.toFormat(this.fullFormat) : issuedAt,
+            expires_at: toFormat
                 ? expiresAt.toFormat(this.fullFormat)
                 : expiresAt,
         }

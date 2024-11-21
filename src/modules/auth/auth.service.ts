@@ -61,20 +61,20 @@ export class AuthService {
     }: {
         tokenString: string
     }): Promise<TokenJWT> {
-        const { id, iat, exp }: { id: number; iat: number; exp: number } =
+        const { sub, iat, exp }: PayloadJWT =
             this.jwtService.decode(tokenString)
 
-        const existToken = await this.findToken({ by: { userId: id } })
+        const existToken = await this.findToken({ by: { userId: sub } })
 
         if (existToken) {
             await this.revokeToken({
-                by: { id: existToken.id, userId: id, token: tokenString },
+                by: { id: existToken.id, userId: sub, token: tokenString },
             })
         }
 
         const tokenRepo = this.apiJwtTokenRepository.create({
             token: tokenString,
-            userId: id,
+            user_id: sub,
             type: this.type,
             ...FormatDateTime.jwtTimestamp({ iat, exp }),
         })

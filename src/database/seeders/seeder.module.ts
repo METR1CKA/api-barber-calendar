@@ -7,8 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { Module } from '@nestjs/common'
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User, Role])],
     providers: [SeederService, UserService, RoleService],
     exports: [SeederService, UserService, RoleService],
+    imports: [TypeOrmModule.forFeature([User, Role])],
 })
 export class SeederModule {}
