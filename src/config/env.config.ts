@@ -5,6 +5,13 @@ import 'dotenv/config'
 type ENV = {
     HOST: string
     PORT: number
+    API_JWT_SECRET: string
+    DB_CONNECTION: any
+    DB_HOST: string
+    DB_PORT: number
+    DB_USER: string
+    DB_PASSWORD: string
+    DB_DB_NAME: string
 }
 
 const envSchema = Joi.object({
@@ -17,7 +24,6 @@ const envSchema = Joi.object({
     DB_USER: Joi.string().required(),
     DB_PASSWORD: Joi.string().required(),
     DB_DB_NAME: Joi.string().required(),
-    SYNC_DB: Joi.boolean().required(),
 }).unknown(true)
 
 const { error, value } = envSchema.validate(process.env)
@@ -25,5 +31,7 @@ const { error, value } = envSchema.validate(process.env)
 if (error) {
     throw new Error(`Config validation error: ${error.message}`)
 }
+
+export const Env = value as ENV
 
 export default registerAs('env', () => value as ENV)

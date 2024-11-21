@@ -1,8 +1,8 @@
-import { GetRoleDto } from 'src/modules/roles/dto/get-roles.dto'
-import { Role } from 'src/modules/roles/entities/role.entity'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
 import { InjectRepository } from '@nestjs/typeorm'
+import { GetRoleDto } from './dto/get-roles.dto'
+import { Role } from './entities/role.entity'
 import { Injectable } from '@nestjs/common'
 import { Repository } from 'typeorm'
 

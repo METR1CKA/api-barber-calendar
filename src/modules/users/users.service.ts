@@ -1,11 +1,11 @@
-import { CreateUserDto } from 'src/modules/users/dto/create-user.dto'
-import { UpdateUserDto } from 'src/modules/users/dto/update-user.dto'
-import { GetUsersDto } from 'src/modules/users/dto/get-users.dto'
+import { CreateUserDto } from './dto/create-user.dto'
+import { UpdateUserDto } from './dto/update-user.dto'
+import { GetUsersDto } from './dto/get-users.dto'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Hash } from 'src/shared/utils/bcrypt-hash'
 import { User } from './entities/user.entity'
 import { Injectable } from '@nestjs/common'
 import { Repository } from 'typeorm'
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UsersService {
@@ -24,9 +24,7 @@ export class UsersService {
     }) {
         const newUser = this.userRepository.create({
             ...userData,
-            password: await Hash.hashText({
-                plainText: user_pass,
-            }),
+            password: await bcrypt.hash(user_pass, 10),
         })
 
         const { password, roleId, ...user } =

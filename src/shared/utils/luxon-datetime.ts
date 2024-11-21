@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon'
 
 export class FormatDateTime {
-    private static localZone: string = 'America/Monterrey'
     private static fullFormat: string = 'yyyy-MM-dd HH:mm:ss'
+    private static localZone: string = 'America/Monterrey'
     private static shortFormat: string = 'yyyy-MM-dd'
 
     public static getLocalZone(): string {

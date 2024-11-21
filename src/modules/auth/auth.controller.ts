@@ -8,14 +8,16 @@ import {
     Res,
     UseGuards,
 } from '@nestjs/common'
-import { LoginDto } from 'src/modules/auth/dto/login.dto'
-import { AuthGuard } from 'src/core/guards/auth.guard'
+import { AuthGuard } from '../../core/guards/auth.guard'
 import { UsersService } from '../users/users.service'
-import { Hash } from 'src/shared/utils/bcrypt-hash'
 import { AuthService } from './auth.service'
 import { Request, Response } from 'express'
+import { LoginDto } from './dto/login.dto'
+import * as bcrypt from 'bcrypt'
 
-@Controller('api/auth')
+@Controller({
+    path: 'api/auth',
+})
 export class AuthController {
     constructor(
         private readonly authService: AuthService,
@@ -42,10 +44,10 @@ export class AuthController {
             })
         }
 
-        const passwordMatch = await Hash.compareHash({
-            plainText: loginDto.password,
-            hashText: user.password,
-        })
+        const passwordMatch = await bcrypt.compare(
+            loginDto.password,
+            user.password,
+        )
 
         if (!passwordMatch) {
             return response.status(HttpStatus.UNAUTHORIZED).json({

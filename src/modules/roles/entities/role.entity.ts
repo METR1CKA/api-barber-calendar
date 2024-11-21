@@ -1,6 +1,6 @@
-import { User } from 'src/modules/users/entities/user.entity'
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm'
 import { ApiProperty, ApiSchema } from '@nestjs/swagger'
-import { Column, Entity, OneToMany } from 'typeorm'
+import { User } from '../../users/entities/user.entity'
 
 @ApiSchema({ name: 'Role' })
 @Entity({
@@ -10,33 +10,20 @@ export class Role {
     @ApiProperty({
         description: 'Id del rol',
         required: false,
-        nullable: false,
         type: 'integer',
-        format: 'int',
         title: 'id',
-        example: 1,
     })
-    @Column({
-        generated: 'increment',
-        nullable: false,
-        primary: true,
-        type: 'int',
-    })
+    @PrimaryColumn()
     public id: number
 
     @ApiProperty({
         description: 'Nombre del rol',
         example: 'ADMIN',
-        nullable: false,
         required: true,
         type: 'string',
         title: 'name',
     })
-    @Column({
-        nullable: false,
-        type: 'varchar',
-        length: 150,
-    })
+    @Column()
     public name: string
 
     @ApiProperty({
@@ -47,30 +34,21 @@ export class Role {
         required: true,
         type: 'string',
     })
-    @Column({
-        type: 'text',
-        nullable: true,
-    })
+    @Column()
     public description?: string
 
     @ApiProperty({
         description: 'Estado del rol',
         type: 'boolean',
         title: 'active',
-        nullable: false,
         required: true,
     })
-    @Column({
-        type: 'boolean',
-        nullable: false,
-        default: true,
-    })
+    @Column()
     public active: boolean
 
     @ApiProperty({
         description: 'Usuarios relacionados con el rol',
         title: 'users',
-        nullable: false,
         required: true,
         type: 'string',
     })

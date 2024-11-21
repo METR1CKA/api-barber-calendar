@@ -1,6 +1,6 @@
-import { FormatDateTime } from 'src/shared/utils/luxon-datetime'
+import { FormatDateTime } from '../../shared/utils/luxon-datetime'
+import { PayloadJWT, TokenJWT } from '../../shared/types/jwt.type'
 import { ApiJwtToken } from './entities/api-jwt-token.entity'
-import { PayloadJWT, TokenJWT } from 'src/shared/types/jwt.type'
 import { InjectRepository } from '@nestjs/typeorm'
 import { DeleteResult, Repository } from 'typeorm'
 import { Injectable } from '@nestjs/common'
