@@ -11,6 +11,8 @@ import {
     ParseIntPipe,
     UseGuards,
     HttpCode,
+    UseInterceptors,
+    ClassSerializerInterceptor,
 } from '@nestjs/common'
 import { ApiResponseType } from '../../shared/types/api-response.type'
 import { ApiBody, ApiResponse } from '@nestjs/swagger'
@@ -30,6 +32,7 @@ export class UsersController {
     @Post()
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.CREATED)
+    @UseInterceptors(ClassSerializerInterceptor)
     @ApiBody({ type: CreateUserDto })
     @ApiResponse({
         status: HttpStatus.CREATED,
@@ -97,6 +100,7 @@ export class UsersController {
 
     @Get()
     @UseGuards(AuthGuard)
+    @UseInterceptors(ClassSerializerInterceptor)
     @HttpCode(HttpStatus.OK)
     @ApiResponse({
         status: HttpStatus.OK,
@@ -134,6 +138,7 @@ export class UsersController {
     @Get(':id')
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
+    @UseInterceptors(ClassSerializerInterceptor)
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Usuario encontrado',
@@ -183,6 +188,7 @@ export class UsersController {
     @Patch(':id')
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
+    @UseInterceptors(ClassSerializerInterceptor)
     @ApiBody({ type: UpdateUserDto })
     @ApiResponse({
         status: HttpStatus.OK,
@@ -234,6 +240,7 @@ export class UsersController {
     @Delete(':id')
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
+    @UseInterceptors(ClassSerializerInterceptor)
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Usuario activado/desactivado',

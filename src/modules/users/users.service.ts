@@ -58,7 +58,10 @@ export class UsersService {
         return {
             status: 'OK',
             message: 'Usuario creado',
-            data: userNew,
+            data: await this.userRepository.findOne({
+                where: { id: userNew.id },
+                relations: ['role'],
+            }),
         }
     }
 
@@ -144,7 +147,10 @@ export class UsersService {
         return {
             status: 'OK',
             message: 'Usuario actualizado',
-            data: updatedUser,
+            data: await this.userRepository.findOne({
+                where: { id: updatedUser.id },
+                relations: ['role'],
+            }),
         }
     }
 

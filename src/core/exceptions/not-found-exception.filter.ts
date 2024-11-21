@@ -11,7 +11,9 @@ import { Response, Request } from 'express'
 export class NotFoundExceptionFilter implements ExceptionFilter {
     catch(_exception: NotFoundException, host: ArgumentsHost) {
         const ctx = host.switchToHttp()
+
         const response = ctx.getResponse<Response>()
+
         const request = ctx.getRequest<Request>()
 
         if (_exception.message === `Cannot GET ${request.url}`) {

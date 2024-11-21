@@ -9,6 +9,7 @@ import {
 import { ApiJwtToken } from '../../auth/entities/api-jwt-token.entity'
 import { ApiProperty, ApiSchema } from '@nestjs/swagger'
 import { Role } from '../../roles/entities/role.entity'
+import { Exclude } from 'class-transformer'
 
 @ApiSchema({ name: 'User' })
 @Entity({
@@ -35,6 +36,7 @@ export class User {
     @Column({
         nullable: true,
     })
+    @Exclude()
     public role_id: number
 
     @ApiProperty({
@@ -53,6 +55,7 @@ export class User {
         required: true,
         type: 'string',
     })
+    @Exclude()
     @Column()
     public password: string
 
@@ -113,4 +116,8 @@ export class User {
 
     @OneToMany(() => ApiJwtToken, (token) => token.user)
     public tokens: ApiJwtToken[]
+
+    constructor(partial: Partial<User>) {
+        Object.assign(this, partial)
+    }
 }
