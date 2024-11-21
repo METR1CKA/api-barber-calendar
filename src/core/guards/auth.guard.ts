@@ -47,6 +47,8 @@ export class AuthGuard implements CanActivate {
             if (!existToken) {
                 throw new Error('Token no válido')
             }
+
+            request['user'] = payload
         } catch (error) {
             if (error instanceof TokenExpiredError) {
                 await this.authService.revokeToken({

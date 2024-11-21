@@ -1,26 +1,32 @@
-import { Injectable } from '@nestjs/common';
-import { CreateServiceDto } from './dto/create-service.dto';
-import { UpdateServiceDto } from './dto/update-service.dto';
+import { CreateServiceDto } from './dto/create-service.dto'
+import { UpdateServiceDto } from './dto/update-service.dto'
+import { Service } from './entities/service.entity'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Injectable } from '@nestjs/common'
+import { Repository } from 'typeorm'
 
 @Injectable()
 export class ServicesService {
-  create(createServiceDto: CreateServiceDto) {
-    return 'This action adds a new service';
-  }
+    constructor(
+        @InjectRepository(Service)
+        private serviceRepository: Repository<Service>,
+    ) {}
 
-  findAll() {
-    return `This action returns all services`;
-  }
+    public async create({}: { createServiceDto: CreateServiceDto }) {}
 
-  findOne(id: number) {
-    return `This action returns a #${id} service`;
-  }
+    findAll() {
+        return `This action returns all services`
+    }
 
-  update(id: number, updateServiceDto: UpdateServiceDto) {
-    return `This action updates a #${id} service`;
-  }
+    findOne(id: number) {
+        return `This action returns a #${id} service`
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} service`;
-  }
+    update(id: number, updateServiceDto: UpdateServiceDto) {
+        return `This action updates a #${id} service`
+    }
+
+    remove(id: number) {
+        return `This action removes a #${id} service`
+    }
 }

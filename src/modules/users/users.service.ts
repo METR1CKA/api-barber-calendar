@@ -1,99 +1,170 @@
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { GetUsersDto } from './dto/get-users.dto'
+import { RolesService } from '../roles/roles.service'
 import { InjectRepository } from '@nestjs/typeorm'
+import { GetUsersDto } from './dto/get-users.dto'
 import { User } from './entities/user.entity'
-import { Injectable } from '@nestjs/common'
 import { Repository } from 'typeorm'
 import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UsersService {
-    private fields: (keyof User)[]
-
     constructor(
         @InjectRepository(User) private userRepository: Repository<User>,
-    ) {
-        this.fields = ['id', 'email', 'username', 'name', 'lastname', 'active']
-    }
+        private readonly rolesService: RolesService,
+    ) {}
 
     public async create({
         createUserDto: { password: user_pass, ...userData },
     }: {
         createUserDto: CreateUserDto
     }) {
+        const userExists = await this.userRepository.findOne({
+            where: { email: userData.email },
+        })
+
+        if (userExists) {
+            throw new BadRequestException({
+                status: 'ERROR',
+                message: 'Ya existe un usuario con este correo',
+                data: null,
+            })
+        }
+
+        const role = await this.rolesService.findOne({
+            by: { id: userData.role_id },
+        })
+
+        if (!role) {
+            throw new BadRequestException({
+                status: 'ERROR',
+                message: 'El rol no existe',
+                data: null,
+            })
+        }
+
         const newUser = this.userRepository.create({
             ...userData,
             password: await bcrypt.hash(user_pass, 10),
         })
 
-        const { password, role_id, ...user } =
-            await this.userRepository.save(newUser)
+        const userNew = await this.userRepository.save(newUser)
 
-        return user
+        return {
+            status: 'OK',
+            message: 'Usuario creado',
+            data: userNew,
+        }
     }
 
     public async findAll({ qs }: { qs: GetUsersDto }) {
         const { page, limit } = qs
 
-        return await this.userRepository.find({
-            select: this.fields,
+        const users = await this.userRepository.find({
             skip: limit * (page - 1),
             take: limit,
             order: { id: 'DESC' },
             relations: ['role'],
         })
+
+        return {
+            status: 'OK',
+            message: 'Usuarios obtenidos correctamente',
+            data: users,
+        }
     }
 
     public async findOne({
         by = {},
-        relations = ['role'],
-        options = { includePassword: false },
     }: {
-        by?: { id?: number; email?: string; active?: boolean }
-        relations?: string[]
-        options?: { includePassword?: boolean }
+        by: { id?: number; email?: string; active?: boolean }
     }) {
-        if (!Object.keys(by).length) {
-            return null
-        }
-
-        const fields = this.fields.slice()
-
-        if (options.includePassword) {
-            fields.push('password')
-        }
-
-        return await this.userRepository.findOne({
-            select: fields,
+        const user = await this.userRepository.findOne({
+            relations: ['role'],
             where: by,
-            relations,
         })
+
+        if (!user) {
+            throw new NotFoundException({
+                status: 'ERROR',
+                message: 'Usuario no encontrado',
+                data: null,
+            })
+        }
+
+        return {
+            status: 'OK',
+            message: 'Usuario encontrado',
+            data: user,
+        }
     }
 
     public async update({
-        user,
+        id,
         updateUserDto,
     }: {
-        user: User
+        id: number
         updateUserDto: UpdateUserDto
     }) {
-        const userUpdated = this.userRepository.merge(user, updateUserDto)
-
-        const { password, role_id, ..._user } =
-            await this.userRepository.save(userUpdated)
-
-        return _user
-    }
-
-    public async remove({ user }: { user: User }) {
-        const userDeleted = this.userRepository.merge(user, {
-            active: !user.active,
+        const user = await this.userRepository.findOne({
+            where: { id },
         })
 
-        const { password, role_id, ..._user } =
-            await this.userRepository.save(userDeleted)
+        if (!user) {
+            throw new NotFoundException({
+                status: 'ERROR',
+                message: 'Usuario no encontrado',
+                data: null,
+            })
+        }
 
-        return _user
+        if (updateUserDto.role_id) {
+            const role = await this.rolesService.findOne({
+                by: { id: updateUserDto.role_id },
+            })
+
+            if (!role) {
+                throw new BadRequestException({
+                    status: 'ERROR',
+                    message: 'El rol no existe',
+                    data: null,
+                })
+            }
+        }
+
+        const userUpdated = this.userRepository.merge(user, updateUserDto)
+
+        const updatedUser = await this.userRepository.save(userUpdated)
+
+        return {
+            status: 'OK',
+            message: 'Usuario actualizado',
+            data: updatedUser,
+        }
+    }
+
+    public async remove({ id }: { id: number }) {
+        const user = await this.userRepository.findOne({
+            where: { id },
+        })
+
+        if (user) {
+            const userDeleted = this.userRepository.merge(user, {
+                active: !user.active,
+            })
+
+            await this.userRepository.save(userDeleted)
+        }
+
+        return {
+            status: 'OK',
+            message: 'Usuario activado/desactivado',
+            data: null,
+        }
     }
 }

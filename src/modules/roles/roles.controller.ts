@@ -6,18 +6,19 @@ import {
     Patch,
     Param,
     Delete,
-    Res,
     HttpStatus,
     Query,
     ParseIntPipe,
     UseGuards,
+    HttpCode,
 } from '@nestjs/common'
+import { ApiResponseType } from 'src/shared/types/api-response.type'
 import { AuthGuard } from '../../core/guards/auth.guard'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
 import { GetRoleDto } from './dto/get-roles.dto'
 import { RolesService } from './roles.service'
-import { Response } from 'express'
+import { Role } from './entities/role.entity'
 
 @Controller({
     path: 'api/v1/roles',
@@ -27,108 +28,46 @@ export class RolesController {
 
     @Post()
     @UseGuards(AuthGuard)
+    @HttpCode(HttpStatus.CREATED)
     public async create(
         @Body() createRoleDto: CreateRoleDto,
-        @Res() response: Response,
-    ): Promise<Response> {
-        const newRole = await this.rolesService.create({ createRoleDto })
-
-        return response.status(HttpStatus.CREATED).json({
-            status: 'OK',
-            message: 'Rol creado',
-            data: newRole,
-        })
+    ): Promise<ApiResponseType<Role>> {
+        return await this.rolesService.create({ createRoleDto })
     }
 
     @Get()
     @UseGuards(AuthGuard)
+    @HttpCode(HttpStatus.OK)
     public async findAll(
         @Query() query: GetRoleDto,
-        @Res() response: Response,
-    ): Promise<Response> {
-        const roles = await this.rolesService.findAll({ qs: query })
-
-        return response.status(HttpStatus.OK).json({
-            status: 'OK',
-            message: 'Roles obtenidos correctamente',
-            data: roles,
-        })
+    ): Promise<ApiResponseType<Role[]>> {
+        return await this.rolesService.findAll({ qs: query })
     }
 
     @Get(':id')
     @UseGuards(AuthGuard)
+    @HttpCode(HttpStatus.OK)
     public async findOne(
         @Param('id', ParseIntPipe) id: number,
-        @Res() response: Response,
-    ): Promise<Response> {
-        const role = await this.rolesService.findOne({
-            by: { id },
-        })
-
-        if (!role) {
-            return response.status(HttpStatus.NOT_FOUND).json({
-                status: 'ERROR',
-                message: 'Rol no encontrado',
-                data: null,
-            })
-        }
-
-        return response.status(HttpStatus.OK).json({
-            status: 'OK',
-            message: 'Rol encontrado',
-            data: role,
-        })
+    ): Promise<ApiResponseType<Role | null>> {
+        return await this.rolesService.findOne({ by: { id } })
     }
 
     @Patch(':id')
     @UseGuards(AuthGuard)
+    @HttpCode(HttpStatus.OK)
     public async update(
         @Param('id', ParseIntPipe) id: number,
         @Body() updateRoleDto: UpdateRoleDto,
-        @Res() response: Response,
-    ): Promise<Response> {
-        const role = await this.rolesService.findOne({
-            by: { id },
-        })
-
-        if (!role) {
-            return response.status(HttpStatus.NOT_FOUND).json({
-                status: 'ERROR',
-                message: 'Rol no encontrado',
-                data: null,
-            })
-        }
-
-        const updatedRole = await this.rolesService.update({
-            updateRoleDto,
-            role,
-        })
-
-        return response.status(HttpStatus.OK).json({
-            status: 'OK',
-            message: 'Rol actualizado',
-            data: updatedRole,
-        })
+    ): Promise<ApiResponseType<Role | null>> {
+        return await this.rolesService.update({ id, updateRoleDto })
     }
 
     @Delete(':id')
     @UseGuards(AuthGuard)
     public async remove(
         @Param('id', ParseIntPipe) id: number,
-        @Res() response: Response,
-    ): Promise<Response> {
-        const role = await this.rolesService.findOne({
-            by: { id },
-        })
-
-        if (role) {
-            await this.rolesService.remove({ role })
-        }
-
-        return response.status(HttpStatus.OK).json({
-            status: 'OK',
-            message: 'Rol activado/desactivado',
-            data: null,
-        })
+    ): Promise<ApiResponseType<Role | null>> {
+        return await this.rolesService.remove({ id })
     }
 }

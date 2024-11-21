@@ -7,31 +7,29 @@ import {
     Post,
     Body,
     Get,
-    Res,
     Query,
     ParseIntPipe,
     UseGuards,
+    HttpCode,
 } from '@nestjs/common'
+import { ApiResponseType } from '../../shared/types/api-response.type'
 import { ApiBody, ApiResponse } from '@nestjs/swagger'
-import { AuthGuard } from 'src/core/guards/auth.guard'
-import { RolesService } from '../roles/roles.service'
+import { AuthGuard } from '../../core/guards/auth.guard'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { GetUsersDto } from './dto/get-users.dto'
 import { UsersService } from './users.service'
-import { Response } from 'express'
+import { User } from './entities/user.entity'
 
 @Controller({
     path: 'api/v1/users',
 })
 export class UsersController {
-    constructor(
-        private readonly usersService: UsersService,
-        private readonly rolesService: RolesService,
-    ) {}
+    constructor(private readonly usersService: UsersService) {}
 
     @Post()
     @UseGuards(AuthGuard)
+    @HttpCode(HttpStatus.CREATED)
     @ApiBody({ type: CreateUserDto })
     @ApiResponse({
         status: HttpStatus.CREATED,
@@ -93,48 +91,13 @@ export class UsersController {
     })
     public async create(
         @Body() createUserDto: CreateUserDto,
-        @Res() response: Response,
-    ): Promise<Response> {
-        const userExists = await this.usersService.findOne({
-            by: {
-                email: createUserDto.email,
-                active: true,
-            },
-        })
-
-        if (userExists) {
-            return response.status(HttpStatus.BAD_REQUEST).json({
-                status: 'ERROR',
-                message: 'Ya existe un usuario con este correo',
-                data: null,
-            })
-        }
-
-        const role = await this.rolesService.findOne({
-            by: {
-                id: createUserDto.role_id,
-            },
-        })
-
-        if (!role) {
-            return response.status(HttpStatus.NOT_FOUND).json({
-                status: 'ERROR',
-                message: 'Rol no encontrado',
-                data: null,
-            })
-        }
-
-        const newUser = await this.usersService.create({ createUserDto })
-
-        return response.status(HttpStatus.CREATED).json({
-            status: 'OK',
-            message: 'Usuario creado',
-            data: newUser,
-        })
+    ): Promise<ApiResponseType<User>> {
+        return await this.usersService.create({ createUserDto })
     }
 
     @Get()
     @UseGuards(AuthGuard)
+    @HttpCode(HttpStatus.OK)
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Usuarios obtenidos correctamente',
@@ -164,19 +127,13 @@ export class UsersController {
     })
     public async findAll(
         @Query() query: GetUsersDto,
-        @Res() response: Response,
-    ): Promise<Response> {
-        const users = await this.usersService.findAll({ qs: query })
-
-        return response.status(HttpStatus.OK).json({
-            status: 'OK',
-            message: 'Usuarios obtenidos correctamente',
-            data: users,
-        })
+    ): Promise<ApiResponseType<User[]>> {
+        return await this.usersService.findAll({ qs: query })
     }
 
     @Get(':id')
     @UseGuards(AuthGuard)
+    @HttpCode(HttpStatus.OK)
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Usuario encontrado',
@@ -219,29 +176,13 @@ export class UsersController {
     })
     public async findOne(
         @Param('id', ParseIntPipe) id: number,
-        @Res() response: Response,
-    ): Promise<Response> {
-        const user = await this.usersService.findOne({
-            by: { id },
-        })
-
-        if (!user) {
-            return response.status(HttpStatus.NOT_FOUND).json({
-                status: 'ERROR',
-                message: 'Usuario no encontrado',
-                data: null,
-            })
-        }
-
-        return response.status(HttpStatus.OK).json({
-            status: 'OK',
-            message: 'Usuario encontrado',
-            data: user,
-        })
+    ): Promise<ApiResponseType<User | null>> {
+        return await this.usersService.findOne({ by: { id } })
     }
 
     @Patch(':id')
     @UseGuards(AuthGuard)
+    @HttpCode(HttpStatus.OK)
     @ApiBody({ type: UpdateUserDto })
     @ApiResponse({
         status: HttpStatus.OK,
@@ -286,50 +227,13 @@ export class UsersController {
     public async update(
         @Param('id', ParseIntPipe) id: number,
         @Body() updateUserDto: UpdateUserDto,
-        @Res() response: Response,
-    ): Promise<Response> {
-        const user = await this.usersService.findOne({
-            by: { id },
-        })
-
-        if (!user) {
-            return response.status(HttpStatus.NOT_FOUND).json({
-                status: 'ERROR',
-                message: 'Usuario no encontrado',
-                data: null,
-            })
-        }
-
-        if (updateUserDto.role_id) {
-            const role = await this.rolesService.findOne({
-                by: {
-                    id: updateUserDto.role_id,
-                },
-            })
-
-            if (!role) {
-                return response.status(HttpStatus.NOT_FOUND).json({
-                    status: 'ERROR',
-                    message: 'Rol no encontrado',
-                    data: null,
-                })
-            }
-        }
-
-        const updatedUser = await this.usersService.update({
-            updateUserDto,
-            user,
-        })
-
-        return response.status(HttpStatus.OK).json({
-            status: 'OK',
-            message: 'Usuario actualizado',
-            data: updatedUser,
-        })
+    ): Promise<ApiResponseType<any>> {
+        return await this.usersService.update({ id, updateUserDto })
     }
 
     @Delete(':id')
     @UseGuards(AuthGuard)
+    @HttpCode(HttpStatus.OK)
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Usuario activado/desactivado',
@@ -348,20 +252,7 @@ export class UsersController {
     })
     public async remove(
         @Param('id', ParseIntPipe) id: number,
-        @Res() response: Response,
-    ): Promise<Response> {
-        const user = await this.usersService.findOne({
-            by: { id },
-        })
-
-        if (user) {
-            await this.usersService.remove({ user })
-        }
-
-        return response.status(HttpStatus.OK).json({
-            status: 'OK',
-            message: 'User activado/desactivado',
-            data: null,
-        })
+    ): Promise<ApiResponseType<null>> {
+        return await this.usersService.remove({ id })
     }
 }
