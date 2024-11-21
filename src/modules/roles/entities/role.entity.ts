@@ -22,7 +22,9 @@ export class Role {
         type: 'integer',
         title: 'id',
     })
-    @PrimaryColumn()
+    @PrimaryColumn({
+        generated: 'increment',
+    })
     public id: number
 
     @ApiProperty({

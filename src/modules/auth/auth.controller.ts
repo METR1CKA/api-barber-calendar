@@ -90,7 +90,7 @@ export class AuthController {
 
         await this.authService.revokeToken({
             by: {
-                userId: payload.sub,
+                user_id: payload.sub,
                 token: tokenString,
             },
         })

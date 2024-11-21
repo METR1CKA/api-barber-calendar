@@ -29,7 +29,7 @@ export class AuthService {
     public async findToken({
         by,
     }: {
-        by: { userId?: number; token?: string }
+        by: { user_id?: number; token?: string }
     }): Promise<ApiJwtToken | null> {
         return await this.apiJwtTokenRepository.findOne({
             where: by,
@@ -49,7 +49,7 @@ export class AuthService {
     }: {
         by: {
             id?: number
-            userId?: number
+            user_id?: number
             token?: string
         }
     }): Promise<DeleteResult> {
@@ -64,11 +64,11 @@ export class AuthService {
         const { sub, iat, exp }: PayloadJWT =
             this.jwtService.decode(tokenString)
 
-        const existToken = await this.findToken({ by: { userId: sub } })
+        const existToken = await this.findToken({ by: { user_id: sub } })
 
         if (existToken) {
             await this.revokeToken({
-                by: { id: existToken.id, userId: sub, token: tokenString },
+                by: { id: existToken.id, user_id: sub, token: tokenString },
             })
         }
 

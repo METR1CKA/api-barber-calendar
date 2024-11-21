@@ -1,13 +1,17 @@
+import { AppointmentsModule } from './modules/appointments/appointments.module'
 import { TimezoneMiddleware } from './core/middleware/timezone.middleware'
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
+import { SchedulesModule } from './modules/schedules/schedules.module'
+import { ServicesModule } from './modules/services/services.module'
 import { SeederModule } from './database/seeders/seeder.module'
 import { dataSourceOptions } from './config/data-source.config'
-import { ConfigModule, ConfigService } from '@nestjs/config'
 import { UsersModule } from './modules/users/users.module'
 import { RolesModule } from './modules/roles/roles.module'
 import { AuthModule } from './modules/auth/auth.module'
 import { AppController } from './app.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { jwtConfig } from './config/jwt.config'
+import { ConfigModule } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import env from './config/env.config'
 
@@ -20,20 +24,14 @@ import env from './config/env.config'
             load: [env],
         }),
         TypeOrmModule.forRoot(dataSourceOptions),
-        JwtModule.registerAsync({
-            global: true,
-            imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: (configService: ConfigService) => ({
-                secret: configService.get<string>('API_JWT_SECRET'),
-                signOptions: { expiresIn: '1d' },
-                global: true,
-            }),
-        }),
+        JwtModule.register(jwtConfig),
         UsersModule,
         RolesModule,
         AuthModule,
         SeederModule,
+        ServicesModule,
+        AppointmentsModule,
+        SchedulesModule,
     ],
     controllers: [AppController],
     providers: [],

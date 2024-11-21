@@ -21,7 +21,9 @@ export class User {
         type: 'integer',
         title: 'id',
     })
-    @PrimaryColumn()
+    @PrimaryColumn({
+        generated: 'increment',
+    })
     public id: number
 
     @ApiProperty({

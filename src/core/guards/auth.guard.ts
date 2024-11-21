@@ -41,7 +41,7 @@ export class AuthGuard implements CanActivate {
             )
 
             const existToken = await this.authService.findToken({
-                by: { userId: payload.sub, token: tokenJwt },
+                by: { user_id: payload.sub, token: tokenJwt },
             })
 
             if (!existToken) {
