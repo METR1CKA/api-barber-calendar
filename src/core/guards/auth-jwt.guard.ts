@@ -10,7 +10,7 @@ import { PayloadJWT } from '../../shared/types/jwt.type'
 import { ConfigService } from '@nestjs/config'
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AuthJwtGuard implements CanActivate {
     constructor(
         private configService: ConfigService,
         private authService: AuthService,

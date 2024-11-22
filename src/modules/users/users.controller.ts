@@ -15,8 +15,8 @@ import {
     ClassSerializerInterceptor,
 } from '@nestjs/common'
 import { ApiResponseType } from '../../shared/types/api-response.type'
+import { AuthJwtGuard } from '../../core/guards/auth-jwt.guard'
 import { ApiBody, ApiResponse } from '@nestjs/swagger'
-import { AuthGuard } from '../../core/guards/auth.guard'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { GetUsersDto } from './dto/get-user.dto'
@@ -29,8 +29,8 @@ import { User } from './entities/user.entity'
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
+    @UseGuards(AuthJwtGuard)
     @Post()
-    @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.CREATED)
     @UseInterceptors(ClassSerializerInterceptor)
     @ApiBody({ type: CreateUserDto })
@@ -98,8 +98,8 @@ export class UsersController {
         return await this.usersService.create({ createUserDto })
     }
 
+    @UseGuards(AuthJwtGuard)
     @Get()
-    @UseGuards(AuthGuard)
     @UseInterceptors(ClassSerializerInterceptor)
     @HttpCode(HttpStatus.OK)
     @ApiResponse({
@@ -135,8 +135,8 @@ export class UsersController {
         return await this.usersService.findAll({ qs: query })
     }
 
+    @UseGuards(AuthJwtGuard)
     @Get(':id')
-    @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(ClassSerializerInterceptor)
     @ApiResponse({
@@ -185,8 +185,8 @@ export class UsersController {
         return await this.usersService.findOne({ by: { id } })
     }
 
+    @UseGuards(AuthJwtGuard)
     @Patch(':id')
-    @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(ClassSerializerInterceptor)
     @ApiBody({ type: UpdateUserDto })
@@ -237,8 +237,8 @@ export class UsersController {
         return await this.usersService.update({ id, updateUserDto })
     }
 
+    @UseGuards(AuthJwtGuard)
     @Delete(':id')
-    @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(ClassSerializerInterceptor)
     @ApiResponse({
