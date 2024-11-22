@@ -3,7 +3,7 @@ import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
 import { Role, ROLES } from './entities/role.entity'
 import { InjectRepository } from '@nestjs/typeorm'
-import { GetRoleDto } from './dto/get-roles.dto'
+import { GetRoleDto } from './dto/get-role.dto'
 import { Repository } from 'typeorm'
 
 @Injectable()
@@ -89,24 +89,18 @@ export class RolesService {
     public async remove({ id }: { id: number }) {
         const role = await this.roleRepository.findOne({ where: { id } })
 
-        if (!role) {
-            throw new NotFoundException({
-                status: 'ERROR',
-                message: 'Rol no encontrado',
-                data: null,
+        if (role) {
+            const roleDeleted = this.roleRepository.merge(role, {
+                active: !role.active,
             })
+
+            await this.roleRepository.save(roleDeleted)
         }
-
-        const roleDeleted = this.roleRepository.merge(role, {
-            active: !role.active,
-        })
-
-        const deletedRole = await this.roleRepository.save(roleDeleted)
 
         return {
             status: 'OK',
             message: 'Rol activado/desactivado',
-            data: deletedRole,
+            data: null,
         }
     }
 }

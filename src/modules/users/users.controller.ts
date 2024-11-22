@@ -19,7 +19,7 @@ import { ApiBody, ApiResponse } from '@nestjs/swagger'
 import { AuthGuard } from '../../core/guards/auth.guard'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { GetUsersDto } from './dto/get-users.dto'
+import { GetUsersDto } from './dto/get-user.dto'
 import { UsersService } from './users.service'
 import { User } from './entities/user.entity'
 

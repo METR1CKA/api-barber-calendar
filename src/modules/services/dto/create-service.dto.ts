@@ -23,7 +23,7 @@ export class CreateServiceDto {
     @IsString({
         message: 'La descripción debe ser un texto',
     })
-    description: string
+    description?: string
 
     @IsNotEmpty({
         message: 'El precio es requerido',

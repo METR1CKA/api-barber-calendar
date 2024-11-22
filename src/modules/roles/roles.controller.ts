@@ -16,7 +16,7 @@ import { ApiResponseType } from 'src/shared/types/api-response.type'
 import { AuthGuard } from '../../core/guards/auth.guard'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
-import { GetRoleDto } from './dto/get-roles.dto'
+import { GetRoleDto } from './dto/get-role.dto'
 import { RolesService } from './roles.service'
 import { Role } from './entities/role.entity'
 
@@ -67,7 +67,7 @@ export class RolesController {
     @UseGuards(AuthGuard)
     public async remove(
         @Param('id', ParseIntPipe) id: number,
-    ): Promise<ApiResponseType<Role | null>> {
+    ): Promise<ApiResponseType<null>> {
         return await this.rolesService.remove({ id })
     }
 }

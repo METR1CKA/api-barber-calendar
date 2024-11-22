@@ -35,11 +35,9 @@ export class Role {
         title: 'name',
     })
     @Column({
-        enum: RoleEnum,
-        type: 'enum',
         unique: true,
     })
-    public name: ROLES
+    public name: string
 
     @ApiProperty({
         description: 'Descripción del rol',

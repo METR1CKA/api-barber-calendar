@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer'
 import { Column, Entity, PrimaryColumn } from 'typeorm'
 
 @Entity({
@@ -17,9 +18,18 @@ export class Service {
     })
     public description?: string
 
-    @Column()
+    @Column({
+        type: 'decimal',
+        precision: 10,
+        scale: 2,
+    })
+    @Transform(({ value }) => parseFloat(value))
     public price: number
 
     @Column()
     public active: boolean
+
+    constructor(partial: Partial<Service>) {
+        Object.assign(this, partial)
+    }
 }
