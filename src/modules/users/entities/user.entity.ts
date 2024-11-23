@@ -10,6 +10,7 @@ import { ApiJwtToken } from '../../auth/entities/api-jwt-token.entity'
 import { ApiProperty, ApiSchema } from '@nestjs/swagger'
 import { Role } from '../../roles/entities/role.entity'
 import { Exclude } from 'class-transformer'
+import { Schedule } from 'src/modules/schedules/entities/schedule.entity'
 
 @ApiSchema({ name: 'User' })
 @Entity({
@@ -116,6 +117,9 @@ export class User {
 
     @OneToMany(() => ApiJwtToken, (token) => token.user)
     public tokens: ApiJwtToken[]
+
+    @OneToMany(() => Schedule, (shedule) => shedule.user)
+    public schedules: Schedule[]
 
     constructor(partial: Partial<User>) {
         Object.assign(this, partial)

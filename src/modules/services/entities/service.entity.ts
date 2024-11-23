@@ -1,5 +1,5 @@
-import { Transform } from 'class-transformer'
 import { Column, Entity, PrimaryColumn } from 'typeorm'
+import { Transform } from 'class-transformer'
 
 @Entity({
     name: 'services',

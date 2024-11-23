@@ -17,13 +17,13 @@ export class CreateServiceDto {
     @MaxLength(150, {
         message: 'El nombre no puede ser mayor a 150 caracteres',
     })
-    name: string
+    public name: string
 
     @IsOptional()
     @IsString({
         message: 'La descripción debe ser un texto',
     })
-    description?: string
+    public description?: string
 
     @IsNotEmpty({
         message: 'El precio es requerido',
@@ -37,5 +37,5 @@ export class CreateServiceDto {
     @IsPositive({
         message: 'El precio debe ser un número positivo',
     })
-    price: number
+    public price: number
 }
