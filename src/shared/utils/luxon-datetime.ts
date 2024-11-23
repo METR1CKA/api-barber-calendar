@@ -1,9 +1,19 @@
 import { DateTime } from 'luxon'
 
+export enum FORMATS {
+    FULL = 'yyyy-MM-dd HH:mm:ss',
+    SHORT = 'yyyy-MM-dd',
+    TIME = 'HH:mm:ss',
+}
+
+export enum ZONES {
+    AMERICA_MONTERREY = 'America/Monterrey',
+}
+
 export class FormatDateTime {
-    private static fullFormat: string = 'yyyy-MM-dd HH:mm:ss'
-    private static localZone: string = 'America/Monterrey'
-    private static shortFormat: string = 'yyyy-MM-dd'
+    private static fullFormat: string = FORMATS.FULL
+    private static localZone: string = ZONES.AMERICA_MONTERREY
+    private static shortFormat: string = FORMATS.SHORT
 
     public static getLocalZone(): string {
         return this.localZone
@@ -26,17 +36,17 @@ export class FormatDateTime {
     }
 
     public static setFullFormat({
-        format = 'yyyy-MM-dd HH:mm:ss',
+        format = FORMATS.FULL,
     }: {
-        format: string
+        format: FORMATS
     }): void {
         this.fullFormat = format
     }
 
     public static setShortFormat({
-        format = 'yyyy-MM-dd',
+        format = FORMATS.SHORT,
     }: {
-        format: string
+        format: FORMATS
     }): void {
         this.shortFormat = format
     }
@@ -50,7 +60,7 @@ export class FormatDateTime {
         datetime,
     }: {
         timezone?: string
-        datetime?: { date: string; format: string }
+        datetime?: { date: string; format: FORMATS }
     }) {
         const datetimeObject = datetime
             ? DateTime.fromFormat(datetime.date, datetime.format)
