@@ -65,7 +65,6 @@ export class AuthService {
             await this.apiJwtTokenRepository.delete({
                 id: existToken.id,
                 user_id: sub,
-                token: tokenJwt,
             })
         }
 

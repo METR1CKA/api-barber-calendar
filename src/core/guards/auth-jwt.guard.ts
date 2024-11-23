@@ -8,6 +8,7 @@ import { AuthService } from '../../modules/auth/auth.service'
 import { JwtService, TokenExpiredError } from '@nestjs/jwt'
 import { PayloadJWT } from '../../shared/types/jwt.type'
 import { ConfigService } from '@nestjs/config'
+import { Request } from 'express'
 
 @Injectable()
 export class AuthJwtGuard implements CanActivate {
@@ -18,7 +19,7 @@ export class AuthJwtGuard implements CanActivate {
     ) {}
 
     public async canActivate(context: ExecutionContext): Promise<boolean> {
-        const request = context.switchToHttp().getRequest()
+        const request = context.switchToHttp().getRequest<Request>()
 
         const [type, token] = request.headers.authorization?.split(' ') ?? []
 
