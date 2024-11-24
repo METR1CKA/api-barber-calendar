@@ -1,16 +1,15 @@
-import { Controller, Get, HttpStatus, Res } from '@nestjs/common'
+import { Controller, Get, HttpStatus, HttpCode } from '@nestjs/common'
+import { AppService } from './app.service'
 import { ApiTags } from '@nestjs/swagger'
-import { Response } from 'express'
 
 @ApiTags('/')
 @Controller('/')
 export class AppController {
+    constructor(private readonly appService: AppService) {}
+
     @Get()
-    public index(@Res() response: Response): Response {
-        return response.status(HttpStatus.OK).json({
-            status: 'OK',
-            message: 'Bienvenido a la API Barbershop V1',
-            data: null,
-        })
+    @HttpCode(HttpStatus.OK)
+    public index() {
+        return this.appService.index()
     }
 }

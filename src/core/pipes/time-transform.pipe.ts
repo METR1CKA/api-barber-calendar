@@ -10,15 +10,15 @@ export class TimeTransformPipe implements PipeTransform {
 
         const valuesEntries = Object.entries(value) // [ [key, value], ... ]
 
-        const valuesFiltered = valuesEntries.filter(([key]) =>
-            key.includes('_time'),
+        const valuesFiltered = valuesEntries.filter(
+            ([key]) => key.includes('_time') || key.includes('_date'),
         )
 
         const valuesMapped = valuesFiltered.map(([key, value]) => [
             key,
             FormatDateTime.fromFormat({
                 date: value as string,
-                format: FORMATS.TIME,
+                format: key.includes('_time') ? FORMATS.TIME : FORMATS.FULL,
             }),
         ])
 

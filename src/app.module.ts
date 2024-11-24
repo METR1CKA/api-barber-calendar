@@ -13,6 +13,7 @@ import { AppController } from './app.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { jwtConfig } from './config/jwt.config'
 import { ConfigModule } from '@nestjs/config'
+import { AppService } from './app.service'
 import { JwtModule } from '@nestjs/jwt'
 import env from './config/env.config'
 
@@ -35,7 +36,7 @@ import env from './config/env.config'
         SchedulesModule,
     ],
     controllers: [AppController],
-    providers: [],
+    providers: [AppService],
 })
 export class AppModule implements NestModule {
     public configure(consumer: MiddlewareConsumer) {

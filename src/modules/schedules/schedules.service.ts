@@ -33,6 +33,7 @@ export class SchedulesService {
             message: 'Horario creado',
             data: await this.scheduleRepository.findOne({
                 where: { id: newSchedule.id },
+                relations: ['user_barber'],
             }),
         }
     }
@@ -112,7 +113,10 @@ export class SchedulesService {
         return {
             status: 'OK',
             message: 'Horario actualizado',
-            data: await this.scheduleRepository.findOne({ where: { id } }),
+            data: await this.scheduleRepository.findOne({
+                where: { id },
+                relations: ['user_barber'],
+            }),
         }
     }
 
@@ -131,7 +135,7 @@ export class SchedulesService {
 
         return {
             status: 'OK',
-            message: 'Horario eliminado',
+            message: 'Horario activado/desactivado',
             data: null,
         }
     }

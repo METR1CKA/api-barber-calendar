@@ -58,6 +58,14 @@ export class Appoiments1732053510984 implements MigrationInterface {
                         type: 'boolean',
                         name: 'status',
                     }),
+
+                    // ACTIVE
+                    new TableColumn({
+                        isNullable: false,
+                        name: 'active',
+                        type: 'boolean',
+                        default: true,
+                    }),
                 ],
             }),
         )

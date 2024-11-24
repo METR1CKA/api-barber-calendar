@@ -1,34 +1,60 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { AppointmentsService } from './appointments.service';
-import { CreateAppointmentDto } from './dto/create-appointment.dto';
-import { UpdateAppointmentDto } from './dto/update-appointment.dto';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    HttpCode,
+    HttpStatus,
+    Query,
+    ParseIntPipe,
+} from '@nestjs/common'
+import { CreateAppointmentDto } from './dto/create-appointment.dto'
+import { UpdateAppointmentDto } from './dto/update-appointment.dto'
+import { AppointmentsService } from './appointments.service'
+import { GetAppointmentDto } from './dto/get-appointment.dto'
 
-@Controller('appointments')
+@Controller({
+    path: 'api/v1/appointments',
+})
 export class AppointmentsController {
-  constructor(private readonly appointmentsService: AppointmentsService) {}
+    constructor(private readonly appointmentsService: AppointmentsService) {}
 
-  @Post()
-  create(@Body() createAppointmentDto: CreateAppointmentDto) {
-    return this.appointmentsService.create(createAppointmentDto);
-  }
+    @Post()
+    @HttpCode(HttpStatus.CREATED)
+    public async create(@Body() createAppointmentDto: CreateAppointmentDto) {
+        return await this.appointmentsService.create({ createAppointmentDto })
+    }
 
-  @Get()
-  findAll() {
-    return this.appointmentsService.findAll();
-  }
+    @Get()
+    @HttpCode(HttpStatus.OK)
+    public async findAll(@Query() getAppointmentDto: GetAppointmentDto) {
+        return await this.appointmentsService.findAll({ getAppointmentDto })
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.appointmentsService.findOne(+id);
-  }
+    @Get(':id')
+    @HttpCode(HttpStatus.OK)
+    public async findOne(@Param('id', ParseIntPipe) id: number) {
+        return await this.appointmentsService.findOne({ by: { id } })
+    }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAppointmentDto: UpdateAppointmentDto) {
-    return this.appointmentsService.update(+id, updateAppointmentDto);
-  }
+    @Patch(':id')
+    @HttpCode(HttpStatus.OK)
+    public async update(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() updateAppointmentDto: UpdateAppointmentDto,
+    ) {
+        return await this.appointmentsService.update({
+            id,
+            updateAppointmentDto,
+        })
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.appointmentsService.remove(+id);
-  }
+    @Delete(':id')
+    @HttpCode(HttpStatus.OK)
+    public async remove(@Param('id', ParseIntPipe) id: number) {
+        return await this.appointmentsService.remove({ id })
+    }
 }

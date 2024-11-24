@@ -20,12 +20,14 @@ export class ServicesService {
     }) {
         const service = this.serviceRepository.create(createServiceDto)
 
-        const newService = await this.serviceRepository.save(service)
+        await this.serviceRepository.save(service)
 
         return {
             status: 'OK',
             message: 'Servicio creado',
-            data: newService,
+            data: await this.serviceRepository.findOne({
+                where: { id: service.id },
+            }),
         }
     }
 
@@ -85,12 +87,14 @@ export class ServicesService {
             updateServiceDto,
         )
 
-        const updatedService = await this.serviceRepository.save(serviceUpdated)
+        await this.serviceRepository.save(serviceUpdated)
 
         return {
             status: 'OK',
             message: 'Servicio actualizado',
-            data: updatedService,
+            data: await this.serviceRepository.findOne({
+                where: { id: serviceUpdated.id },
+            }),
         }
     }
 
