@@ -32,9 +32,7 @@ export class ApiJwtToken {
     })
     public expires_at: Date
 
-    @ManyToOne(() => User, (user) => user.tokens, {
-        eager: true,
-    })
+    @ManyToOne(() => User, (user) => user.tokens)
     @JoinColumn({
         name: 'user_id',
     })

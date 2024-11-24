@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm'
+import { Appointment } from '../../appointments/entities/appointment.entity'
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm'
 import { Transform } from 'class-transformer'
 
 @Entity({
@@ -28,6 +29,9 @@ export class Service {
 
     @Column()
     public active: boolean
+
+    @OneToMany(() => Appointment, (appointment) => appointment.service)
+    public appointments: Appointment[]
 
     constructor(partial: Partial<Service>) {
         Object.assign(this, partial)

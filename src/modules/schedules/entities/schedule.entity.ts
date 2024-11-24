@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
-import { User } from 'src/modules/users/entities/user.entity'
-import { Exclude, Transform } from 'class-transformer'
 import { FormatDateTime, FORMATS } from 'src/shared/utils/luxon-datetime'
+import { User } from '../../users/entities/user.entity'
+import { Exclude, Transform } from 'class-transformer'
 import { DateTime } from 'luxon'
 
 @Entity({
@@ -57,13 +57,11 @@ export class Schedule {
     @Column()
     public active: boolean
 
-    @ManyToOne(() => User, (user) => user.schedules, {
-        eager: true,
-    })
+    @ManyToOne(() => User, (user) => user.schedules)
     @JoinColumn({
         name: 'user_barber_id',
     })
-    public user: User
+    public user_barber: User
 
     constructor(partial: Partial<Schedule>) {
         Object.assign(this, partial)

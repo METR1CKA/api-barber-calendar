@@ -6,6 +6,7 @@ import {
     OneToMany,
     PrimaryColumn,
 } from 'typeorm'
+import { Appointment } from '../../appointments/entities/appointment.entity'
 import { ApiJwtToken } from '../../auth/entities/api-jwt-token.entity'
 import { Schedule } from '../../schedules/entities/schedule.entity'
 import { Role } from '../../roles/entities/role.entity'
@@ -47,9 +48,7 @@ export class User {
     })
     public active: boolean
 
-    @ManyToOne(() => Role, (role) => role.users, {
-        eager: true,
-    })
+    @ManyToOne(() => Role, (role) => role.users)
     @JoinColumn({
         name: 'role_id',
     })
@@ -58,8 +57,14 @@ export class User {
     @OneToMany(() => ApiJwtToken, (token) => token.user)
     public tokens: ApiJwtToken[]
 
-    @OneToMany(() => Schedule, (shedule) => shedule.user)
+    @OneToMany(() => Schedule, (shedule) => shedule.user_barber)
     public schedules: Schedule[]
+
+    @OneToMany(() => Appointment, (appointment) => appointment.user_barber)
+    public appointments_barber: Appointment[]
+
+    @OneToMany(() => Appointment, (appointment) => appointment.user_customer)
+    public appointments_customer: Appointment[]
 
     constructor(partial: Partial<User>) {
         Object.assign(this, partial)

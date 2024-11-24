@@ -48,6 +48,7 @@ export class SchedulesService {
             skip: limit * (page - 1),
             take: limit,
             order: { id: 'DESC' },
+            relations: ['user_barber'],
         })
 
         return {
@@ -58,7 +59,10 @@ export class SchedulesService {
     }
 
     public async findOne({ by }: { by: { id: number } }) {
-        const schedule = await this.scheduleRepository.findOne({ where: by })
+        const schedule = await this.scheduleRepository.findOne({
+            relations: ['user_barber'],
+            where: by,
+        })
 
         if (!schedule) {
             throw new NotFoundException({
@@ -93,6 +97,10 @@ export class SchedulesService {
                 data: null,
             })
         }
+
+        await this.usersService.findOne({
+            by: { id: updateScheduleDto.user_barber_id },
+        })
 
         const scheduleUpdated = this.scheduleRepository.merge(
             schedule,

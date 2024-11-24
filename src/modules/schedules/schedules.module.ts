@@ -14,5 +14,6 @@ import { TypeOrmModule } from '@nestjs/typeorm'
     ],
     controllers: [SchedulesController],
     providers: [SchedulesService],
+    exports: [SchedulesService],
 })
 export class SchedulesModule {}
