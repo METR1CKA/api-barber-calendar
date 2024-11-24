@@ -1,34 +1,43 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { SchedulesService } from './schedules.service';
-import { CreateScheduleDto } from './dto/create-schedule.dto';
-import { UpdateScheduleDto } from './dto/update-schedule.dto';
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    HttpCode,
+    HttpStatus,
+} from '@nestjs/common'
+import { CreateScheduleDto } from './dto/create-schedule.dto'
+import { UpdateScheduleDto } from './dto/update-schedule.dto'
+import { SchedulesService } from './schedules.service'
 
-@Controller('schedules')
+@Controller({
+    path: 'api/v1/schedules',
+})
 export class SchedulesController {
-  constructor(private readonly schedulesService: SchedulesService) {}
+    constructor(private readonly schedulesService: SchedulesService) {}
 
-  @Post()
-  create(@Body() createScheduleDto: CreateScheduleDto) {
-    return this.schedulesService.create(createScheduleDto);
-  }
+    @Post()
+    @HttpCode(HttpStatus.CREATED)
+    public async create(@Body() createScheduleDto: CreateScheduleDto) {
+        return await this.schedulesService.create({ createScheduleDto })
+    }
 
-  @Get()
-  findAll() {
-    return this.schedulesService.findAll();
-  }
+    @Get()
+    @HttpCode(HttpStatus.OK)
+    public async findAll() {}
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.schedulesService.findOne(+id);
-  }
+    @Get(':id')
+    findOne(@Param('id') id: string) {}
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateScheduleDto: UpdateScheduleDto) {
-    return this.schedulesService.update(+id, updateScheduleDto);
-  }
+    @Patch(':id')
+    update(
+        @Param('id') id: string,
+        @Body() updateScheduleDto: UpdateScheduleDto,
+    ) {}
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.schedulesService.remove(+id);
-  }
+    @Delete(':id')
+    remove(@Param('id') id: string) {}
 }

@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm'
 import { User } from 'src/modules/users/entities/user.entity'
-import { Exclude } from 'class-transformer'
+import { Exclude, Transform } from 'class-transformer'
+import { FormatDateTime, FORMATS } from 'src/shared/utils/luxon-datetime'
 import { DateTime } from 'luxon'
 
 @Entity({
@@ -21,21 +22,33 @@ export class Schedule {
     @Column({
         type: 'timestamp',
     })
+    @Transform(({ value }) =>
+        FormatDateTime.serialize({ value, toFormat: FORMATS.TIME }),
+    )
     public start_time: DateTime
 
     @Column({
         type: 'timestamp',
     })
+    @Transform(({ value }) =>
+        FormatDateTime.serialize({ value, toFormat: FORMATS.TIME }),
+    )
     public end_time: DateTime
 
     @Column({
         type: 'timestamp',
     })
+    @Transform(({ value }) =>
+        FormatDateTime.serialize({ value, toFormat: FORMATS.TIME }),
+    )
     public start_rest_time: DateTime
 
     @Column({
         type: 'timestamp',
     })
+    @Transform(({ value }) =>
+        FormatDateTime.serialize({ value, toFormat: FORMATS.TIME }),
+    )
     public end_rest_time: DateTime
 
     @Column()

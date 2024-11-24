@@ -1,11 +1,16 @@
 import { NotFoundExceptionFilter } from './core/exceptions/not-found-exception.filter'
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import { Logger, ValidationPipe } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
-import { NestFactory } from '@nestjs/core'
-import { AppModule } from './app.module'
-import { SeederService } from './database/seeders/seeder.service'
 import { BadRequestExceptionFilter } from './core/exceptions/bad-request-exception.filter'
+import { TimeTransformPipe } from './core/pipes/time-transform.pipe'
+import { SeederService } from './database/seeders/seeder.service'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import {
+    ClassSerializerInterceptor,
+    Logger,
+    ValidationPipe,
+} from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { NestFactory, Reflector } from '@nestjs/core'
+import { AppModule } from './app.module'
 
 async function bootstrap() {
     // Build App
@@ -27,12 +32,21 @@ async function bootstrap() {
             forbidNonWhitelisted: true,
             transform: true,
         }),
+        new TimeTransformPipe(),
     )
 
     app.useGlobalFilters(
         new NotFoundExceptionFilter(),
         new BadRequestExceptionFilter(),
     )
+
+    app.useGlobalInterceptors(
+        new ClassSerializerInterceptor(app.get(Reflector)),
+    )
+
+    // app.useGlobalGuards(
+
+    // )
 
     // Seeders
     const seeders = app.get(SeederService)
@@ -52,6 +66,7 @@ async function bootstrap() {
         SwaggerModule.createDocument(app, document),
     )
 
+    // Start App
     await app.listen(PORT, HOST)
 
     // Logger

@@ -76,6 +76,35 @@ export class FormatDateTime {
         }
     }
 
+    public static fromFormat({
+        date,
+        format,
+        timezone,
+    }: {
+        date: string
+        format: FORMATS
+        timezone?: ZONES
+    }) {
+        return DateTime.fromFormat(date, format).setZone(
+            timezone ?? this.localZone,
+        )
+    }
+
+    public static serialize({
+        value,
+        toFormat,
+    }: {
+        value: any
+        toFormat: FORMATS
+    }) {
+        const valueDateTime =
+            value instanceof Date
+                ? DateTime.fromJSDate(value)
+                : DateTime.fromISO(value)
+
+        return valueDateTime.setZone(this.localZone).toFormat(toFormat)
+    }
+
     public static jwtTimestamp({
         iat,
         exp,

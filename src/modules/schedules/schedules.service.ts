@@ -1,26 +1,40 @@
-import { Injectable } from '@nestjs/common';
-import { CreateScheduleDto } from './dto/create-schedule.dto';
-import { UpdateScheduleDto } from './dto/update-schedule.dto';
+import { CreateScheduleDto } from './dto/create-schedule.dto'
+import { UpdateScheduleDto } from './dto/update-schedule.dto'
+import { Schedule } from './entities/schedule.entity'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Injectable } from '@nestjs/common'
+import { Repository } from 'typeorm'
 
 @Injectable()
 export class SchedulesService {
-  create(createScheduleDto: CreateScheduleDto) {
-    return 'This action adds a new schedule';
-  }
+    constructor(
+        @InjectRepository(Schedule)
+        private scheduleRepository: Repository<Schedule>,
+    ) {}
 
-  findAll() {
-    return `This action returns all schedules`;
-  }
+    public async create({
+        createScheduleDto,
+    }: {
+        createScheduleDto: CreateScheduleDto
+    }) {
+        const newSchedule = this.scheduleRepository.create(createScheduleDto)
 
-  findOne(id: number) {
-    return `This action returns a #${id} schedule`;
-  }
+        await this.scheduleRepository.save(newSchedule)
 
-  update(id: number, updateScheduleDto: UpdateScheduleDto) {
-    return `This action updates a #${id} schedule`;
-  }
+        return {
+            status: 'OK',
+            message: 'Horario creado',
+            data: await this.scheduleRepository.findOne({
+                where: { id: newSchedule.id },
+            }),
+        }
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} schedule`;
-  }
+    findAll() {}
+
+    findOne(id: number) {}
+
+    update(id: number, updateScheduleDto: UpdateScheduleDto) {}
+
+    remove(id: number) {}
 }

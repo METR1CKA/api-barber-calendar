@@ -6,10 +6,8 @@ import {
     HttpStatus,
     Post,
     Req,
-    UseGuards,
 } from '@nestjs/common'
 import { ApiResponseType } from '../../shared/types/api-response.type'
-import { AuthJwtGuard } from '../../core/guards/auth-jwt.guard'
 import { TokenJWT } from '../../shared/types/jwt.type'
 import { AuthService } from './auth.service'
 import { LoginDto } from './dto/login.dto'
@@ -31,14 +29,12 @@ export class AuthController {
 
     @Post('logout')
     @HttpCode(HttpStatus.OK)
-    @UseGuards(AuthJwtGuard)
     public async logout(@Req() request: Request) {
         return await this.authService.logout({ request })
     }
 
     @Get('me')
     @HttpCode(HttpStatus.OK)
-    @UseGuards(AuthJwtGuard)
     public async me(@Req() request: Request) {
         return await this.authService.me({ request })
     }

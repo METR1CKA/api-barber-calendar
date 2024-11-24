@@ -14,6 +14,7 @@ import { jwtConfig } from './config/jwt.config'
 import { ConfigModule } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import env from './config/env.config'
+import { RequestLogMiddleware } from './core/middleware/request-log.middleware'
 
 @Module({
     imports: [
@@ -38,6 +39,7 @@ import env from './config/env.config'
 })
 export class AppModule implements NestModule {
     public configure(consumer: MiddlewareConsumer) {
+        consumer.apply(RequestLogMiddleware).forRoutes('*')
         consumer.apply(TimezoneMiddleware).forRoutes('*')
     }
 }

@@ -7,17 +7,9 @@ import {
     MaxLength,
     MinLength,
 } from 'class-validator'
-import { ApiProperty } from '@nestjs/swagger'
 import { Transform } from 'class-transformer'
 
 export class CreateUserDto {
-    @ApiProperty({
-        description: 'Email del usuario',
-        example: 'user@mail.com',
-        required: true,
-        type: 'string',
-        title: 'email',
-    })
     @IsString({
         message: 'El email debe ser un string',
     })
@@ -35,13 +27,6 @@ export class CreateUserDto {
     })
     public email: string
 
-    @ApiProperty({
-        description: 'Username del usuario',
-        example: 'FulanoUser123',
-        required: true,
-        type: 'string',
-        title: 'username',
-    })
     @IsString({
         message: 'El username debe ser un string',
     })
@@ -53,12 +38,6 @@ export class CreateUserDto {
     })
     public username: string
 
-    @ApiProperty({
-        description: 'Contraseña del usuario',
-        required: true,
-        type: 'string',
-        title: 'password',
-    })
     @IsString({
         message: 'La contraseña debe ser un string',
     })
@@ -74,13 +53,6 @@ export class CreateUserDto {
     @Transform(({ value }) => value.trim().split(' ').join(''))
     public password: string
 
-    @ApiProperty({
-        description: 'Nombre',
-        example: 'Fernando',
-        required: true,
-        type: 'string',
-        title: 'name',
-    })
     @IsString({
         message: 'El nombre debe ser un string',
     })
@@ -92,13 +64,6 @@ export class CreateUserDto {
     })
     public name: string
 
-    @ApiProperty({
-        description: 'Apellido',
-        example: 'Ortiz',
-        required: true,
-        type: 'string',
-        title: 'lastname',
-    })
     @IsString({
         message: 'El apellido debe ser un string',
     })
@@ -110,12 +75,6 @@ export class CreateUserDto {
     })
     public lastname: string
 
-    @ApiProperty({
-        description: 'Rol del usuario',
-        required: true,
-        type: 'number',
-        title: 'role_id',
-    })
     @IsNotEmpty({
         message: 'El rol es requerido',
     })

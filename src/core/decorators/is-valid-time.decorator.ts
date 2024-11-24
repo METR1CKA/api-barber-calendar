@@ -10,6 +10,8 @@ import { FormatDateTime, FORMATS } from '../../shared/utils/luxon-datetime'
 @ValidatorConstraint({ async: false })
 export class IsValidTimeConstraint implements ValidatorConstraintInterface {
     public validate(value: string, args: ValidationArguments): boolean {
+        if (!value || typeof value !== 'string') return false
+
         const format = args.constraints[0]
 
         const validationResult = FormatDateTime.isValid({
@@ -23,9 +25,9 @@ export class IsValidTimeConstraint implements ValidatorConstraintInterface {
     }
 
     public defaultMessage(args: ValidationArguments): string {
-        const format = args.constraints[0]
+        const [format] = args.constraints
 
-        return `The value "${args.value}" is not valid. It must comply with the format ${format}`
+        return `Invalid time format. It must comply with the format ${format}`
     }
 }
 
