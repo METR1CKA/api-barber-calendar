@@ -54,6 +54,9 @@ export class Schedule {
     @Column()
     public day: number
 
+    @Column()
+    public active: boolean
+
     @ManyToOne(() => User, (user) => user.schedules, {
         eager: true,
     })

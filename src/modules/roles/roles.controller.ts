@@ -10,8 +10,10 @@ import {
     Query,
     ParseIntPipe,
     HttpCode,
+    UseGuards,
 } from '@nestjs/common'
 import { ApiResponseType } from 'src/shared/types/api-response.type'
+import { AuthJwtGuard } from 'src/core/guards/auth-jwt.guard'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
 import { GetRoleDto } from './dto/get-role.dto'
@@ -25,6 +27,7 @@ export class RolesController {
     constructor(private readonly rolesService: RolesService) {}
 
     @Post()
+    @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.CREATED)
     public async create(
         @Body() createRoleDto: CreateRoleDto,
@@ -33,6 +36,7 @@ export class RolesController {
     }
 
     @Get()
+    @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.OK)
     public async findAll(
         @Query() query: GetRoleDto,
@@ -41,6 +45,7 @@ export class RolesController {
     }
 
     @Get(':id')
+    @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.OK)
     public async findOne(
         @Param('id', ParseIntPipe) id: number,
@@ -49,6 +54,7 @@ export class RolesController {
     }
 
     @Patch(':id')
+    @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.OK)
     public async update(
         @Param('id', ParseIntPipe) id: number,
@@ -58,6 +64,7 @@ export class RolesController {
     }
 
     @Delete(':id')
+    @UseGuards(AuthJwtGuard)
     public async remove(
         @Param('id', ParseIntPipe) id: number,
     ): Promise<ApiResponseType<null>> {

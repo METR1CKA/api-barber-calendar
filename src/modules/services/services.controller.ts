@@ -12,7 +12,9 @@ import {
     ClassSerializerInterceptor,
     HttpCode,
     HttpStatus,
+    UseGuards,
 } from '@nestjs/common'
+import { AuthJwtGuard } from 'src/core/guards/auth-jwt.guard'
 import { CreateServiceDto } from './dto/create-service.dto'
 import { UpdateServiceDto } from './dto/update-service.dto'
 import { GetServiceDto } from './dto/get-service.dto'
@@ -25,12 +27,14 @@ export class ServicesController {
     constructor(private readonly servicesService: ServicesService) {}
 
     @Post()
+    @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.CREATED)
     public async create(@Body() createServiceDto: CreateServiceDto) {
         return await this.servicesService.create({ createServiceDto })
     }
 
     @Get()
+    @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(ClassSerializerInterceptor)
     public async findAll(@Query() query: GetServiceDto) {
@@ -38,6 +42,7 @@ export class ServicesController {
     }
 
     @Get(':id')
+    @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(ClassSerializerInterceptor)
     public async findOne(@Param('id', ParseIntPipe) id: number) {
@@ -45,6 +50,7 @@ export class ServicesController {
     }
 
     @Patch(':id')
+    @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.OK)
     public async update(
         @Param('id', ParseIntPipe) id: number,
@@ -57,6 +63,7 @@ export class ServicesController {
     }
 
     @Delete(':id')
+    @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.OK)
     public async remove(@Param('id', ParseIntPipe) id: number) {
         return await this.servicesService.remove({ id })

@@ -11,6 +11,7 @@ import {
 import { ConfigService } from '@nestjs/config'
 import { NestFactory, Reflector } from '@nestjs/core'
 import { AppModule } from './app.module'
+import { AuthJwtGuard } from './core/guards/auth-jwt.guard'
 
 async function bootstrap() {
     // Build App
@@ -43,10 +44,6 @@ async function bootstrap() {
     app.useGlobalInterceptors(
         new ClassSerializerInterceptor(app.get(Reflector)),
     )
-
-    // app.useGlobalGuards(
-
-    // )
 
     // Seeders
     const seeders = app.get(SeederService)

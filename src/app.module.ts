@@ -1,3 +1,4 @@
+import { RequestLogMiddleware } from './core/middleware/request-log.middleware'
 import { AppointmentsModule } from './modules/appointments/appointments.module'
 import { TimezoneMiddleware } from './core/middleware/timezone.middleware'
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
@@ -14,7 +15,6 @@ import { jwtConfig } from './config/jwt.config'
 import { ConfigModule } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import env from './config/env.config'
-import { RequestLogMiddleware } from './core/middleware/request-log.middleware'
 
 @Module({
     imports: [

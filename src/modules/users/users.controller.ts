@@ -10,8 +10,10 @@ import {
     Query,
     ParseIntPipe,
     HttpCode,
+    UseGuards,
 } from '@nestjs/common'
 import { ApiResponseType } from '../../shared/types/api-response.type'
+import { AuthJwtGuard } from 'src/core/guards/auth-jwt.guard'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { GetUsersDto } from './dto/get-user.dto'
@@ -25,6 +27,7 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     @Post()
+    @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.CREATED)
     public async create(
         @Body() createUserDto: CreateUserDto,
@@ -33,6 +36,7 @@ export class UsersController {
     }
 
     @Get()
+    @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.OK)
     public async findAll(
         @Query() query: GetUsersDto,
@@ -41,6 +45,7 @@ export class UsersController {
     }
 
     @Get(':id')
+    @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.OK)
     public async findOne(
         @Param('id', ParseIntPipe) id: number,
@@ -49,6 +54,7 @@ export class UsersController {
     }
 
     @Patch(':id')
+    @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.OK)
     public async update(
         @Param('id', ParseIntPipe) id: number,
@@ -58,6 +64,7 @@ export class UsersController {
     }
 
     @Delete(':id')
+    @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.OK)
     public async remove(
         @Param('id', ParseIntPipe) id: number,

@@ -65,6 +65,14 @@ export class Schedules1732053516262 implements MigrationInterface {
                         name: 'day',
                         type: 'int',
                     }),
+
+                    // ACTIVE
+                    new TableColumn({
+                        isNullable: false,
+                        name: 'active',
+                        type: 'boolean',
+                        default: true,
+                    }),
                 ],
             }),
         )

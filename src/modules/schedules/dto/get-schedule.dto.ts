@@ -1,7 +1,7 @@
 import { IsOptional, IsPositive } from 'class-validator'
 import { Type } from 'class-transformer'
 
-export class GetServiceDto {
+export class GetScheduleDto {
     @IsPositive()
     @IsOptional()
     @Type(() => Number)
