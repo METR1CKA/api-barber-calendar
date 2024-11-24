@@ -1,20 +1,17 @@
 import {
+    BadRequestException,
     ExceptionFilter,
-    Catch,
     ArgumentsHost,
-    NotFoundException,
-    HttpStatus,
+    Catch,
 } from '@nestjs/common'
-import { Response, Request } from 'express'
+import { Response } from 'express'
 
-@Catch(NotFoundException)
-export class NotFoundExceptionFilter implements ExceptionFilter {
-    catch(exception: NotFoundException, host: ArgumentsHost) {
+@Catch(BadRequestException)
+export class BadRequestExceptionFilter implements ExceptionFilter {
+    catch(exception: BadRequestException, host: ArgumentsHost) {
         const ctx = host.switchToHttp()
 
         const response = ctx.getResponse<Response>()
-
-        const request = ctx.getRequest<Request>()
 
         const exceptionResponse: any = exception.getResponse()
 
@@ -28,11 +25,8 @@ export class NotFoundExceptionFilter implements ExceptionFilter {
         ) {
             return response.status(statusCode).json({
                 status: 'ERROR',
-                message: 'La ruta solicitada no existe.',
-                data: {
-                    method: request.method,
-                    url: request.url,
-                },
+                message: 'Error de validación de datos',
+                data: exceptionResponse?.message,
             })
         }
 

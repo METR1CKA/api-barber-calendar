@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { SeederService } from './database/seeders/seeder.service'
+import { BadRequestExceptionFilter } from './core/exceptions/bad-request-exception.filter'
 
 async function bootstrap() {
     // Build App
@@ -28,7 +29,10 @@ async function bootstrap() {
         }),
     )
 
-    app.useGlobalFilters(new NotFoundExceptionFilter())
+    app.useGlobalFilters(
+        new NotFoundExceptionFilter(),
+        new BadRequestExceptionFilter(),
+    )
 
     // Seeders
     const seeders = app.get(SeederService)
