@@ -78,10 +78,6 @@ async function bootstrap() {
     const yamlSchema = yaml.dump(createSwagger)
 
     fs.writeFileSync('./src/docs/swagger.yaml', yamlSchema)
-    fs.writeFileSync(
-        './src/docs/swagger.json',
-        JSON.stringify(createSwagger, null, 2),
-    )
 
     // Start App
     await app.listen(PORT, HOST)
