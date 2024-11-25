@@ -9,11 +9,9 @@ import { dataSourceOptions } from './config/data-source.config'
 import { UsersModule } from './modules/users/users.module'
 import { RolesModule } from './modules/roles/roles.module'
 import { AuthModule } from './modules/auth/auth.module'
-import { AppController } from './app.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { jwtConfig } from './config/jwt.config'
 import { ConfigModule } from '@nestjs/config'
-import { AppService } from './app.service'
 import { JwtModule } from '@nestjs/jwt'
 import env from './config/env.config'
 
@@ -35,8 +33,8 @@ import env from './config/env.config'
         AppointmentsModule,
         SchedulesModule,
     ],
-    controllers: [AppController],
-    providers: [AppService],
+    controllers: [],
+    providers: [],
 })
 export class AppModule implements NestModule {
     public configure(consumer: MiddlewareConsumer) {

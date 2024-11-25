@@ -8,6 +8,7 @@ import {
     MinLength,
 } from 'class-validator'
 import { Transform } from 'class-transformer'
+import { ApiProperty } from '@nestjs/swagger'
 
 export class CreateUserDto {
     @IsString({
@@ -25,6 +26,7 @@ export class CreateUserDto {
     @MaxLength(150, {
         message: 'El email debe tener menos de 150 caracteres',
     })
+    @ApiProperty()
     public email: string
 
     @IsString({
@@ -36,6 +38,7 @@ export class CreateUserDto {
     @MaxLength(150, {
         message: 'El username debe tener menos de 150 caracteres',
     })
+    @ApiProperty()
     public username: string
 
     @IsString({
@@ -51,6 +54,7 @@ export class CreateUserDto {
         message: 'La contraseña debe tener al menos 8 caracteres',
     })
     @Transform(({ value }) => value.trim().split(' ').join(''))
+    @ApiProperty()
     public password: string
 
     @IsString({
@@ -62,6 +66,7 @@ export class CreateUserDto {
     @MaxLength(150, {
         message: 'El nombre debe tener menos de 150 caracteres',
     })
+    @ApiProperty()
     public name: string
 
     @IsString({
@@ -73,6 +78,7 @@ export class CreateUserDto {
     @MaxLength(150, {
         message: 'El apellido debe tener menos de 150 caracteres',
     })
+    @ApiProperty()
     public lastname: string
 
     @IsNotEmpty({
@@ -87,5 +93,6 @@ export class CreateUserDto {
     @IsPositive({
         message: 'El rol debe ser un numero positivo',
     })
+    @ApiProperty()
     public role_id: number
 }

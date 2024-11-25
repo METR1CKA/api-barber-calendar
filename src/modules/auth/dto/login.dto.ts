@@ -6,6 +6,7 @@ import {
     MinLength,
 } from 'class-validator'
 import { Transform } from 'class-transformer'
+import { ApiProperty } from '@nestjs/swagger'
 
 export class LoginDto {
     @IsString({
@@ -23,6 +24,7 @@ export class LoginDto {
     @MaxLength(150, {
         message: 'El email debe tener menos de 150 caracteres',
     })
+    @ApiProperty()
     public email: string
 
     @IsString({
@@ -38,5 +40,6 @@ export class LoginDto {
         message: 'La contraseña debe tener al menos 8 caracteres',
     })
     @Transform(({ value }) => value.trim().split(' ').join(''))
+    @ApiProperty()
     public password: string
 }

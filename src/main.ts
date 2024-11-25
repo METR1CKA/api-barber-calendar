@@ -55,26 +55,21 @@ async function bootstrap() {
         .setTitle('API BarberShop')
         .setDescription('API for BarberShop management')
         .setVersion('1.0')
+        .addBearerAuth()
         .addServer(`http://${HOST}:${PORT}`, 'Development')
         .build()
 
-    SwaggerModule.setup(
-        'api/docs',
-        app,
-        SwaggerModule.createDocument(app, document),
-    )
+    SwaggerModule.setup('/', app, SwaggerModule.createDocument(app, document))
 
     // Start App
     await app.listen(PORT, HOST)
 
     // Logger
-    const logger = new Logger('API Barber')
-    const loggerSwagger = new Logger('Swagger')
+    const logger = new Logger('Docs for API BarberShop')
 
     const url = await app.getUrl()
 
-    logger.log(`Server running at: ${url}`)
-    loggerSwagger.log(`Swagger running at: ${url}/api/docs`)
+    logger.log(`Swagger running at: ${url}`)
 }
 
 bootstrap()

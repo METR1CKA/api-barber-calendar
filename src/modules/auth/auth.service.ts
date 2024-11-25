@@ -82,6 +82,7 @@ export class AuthService {
             message: 'Inicio de sesión exitoso',
             data: {
                 token: tokenJwt,
+                type: this.type,
                 ...FormatDateTime.jwtTimestamp({ iat, exp, toFormat: true }),
             },
         }
