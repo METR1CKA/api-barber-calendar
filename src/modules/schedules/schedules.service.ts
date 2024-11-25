@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common'
 import { CreateScheduleDto } from './dto/create-schedule.dto'
 import { UpdateScheduleDto } from './dto/update-schedule.dto'
 import { GetScheduleDto } from './dto/get-schedule.dto'
@@ -20,6 +24,31 @@ export class SchedulesService {
     }: {
         createScheduleDto: CreateScheduleDto
     }) {
+        if (createScheduleDto.start_time > createScheduleDto.end_time) {
+            throw new BadRequestException({
+                status: 'ERROR',
+                message: 'La hora de inicio debe ser menor a la hora de fin',
+                data: null,
+            })
+        }
+
+        if (
+            createScheduleDto.start_rest_time &&
+            createScheduleDto.end_rest_time
+        ) {
+            if (
+                createScheduleDto.start_rest_time >
+                createScheduleDto.end_rest_time
+            ) {
+                throw new BadRequestException({
+                    status: 'ERROR',
+                    message:
+                        'La hora de inicio del descanso debe ser menor a la hora de fin del descanso',
+                    data: null,
+                })
+            }
+        }
+
         await this.usersService.findOne({
             by: { id: createScheduleDto.user_barber_id },
         })
@@ -87,6 +116,34 @@ export class SchedulesService {
         id: number
         updateScheduleDto: UpdateScheduleDto
     }) {
+        if (updateScheduleDto.start_time && updateScheduleDto.end_time) {
+            if (updateScheduleDto.start_time > updateScheduleDto.end_time) {
+                throw new BadRequestException({
+                    status: 'ERROR',
+                    message:
+                        'La hora de inicio debe ser menor a la hora de fin',
+                    data: null,
+                })
+            }
+        }
+
+        if (
+            updateScheduleDto.start_rest_time &&
+            updateScheduleDto.end_rest_time
+        ) {
+            if (
+                updateScheduleDto.start_rest_time >
+                updateScheduleDto.end_rest_time
+            ) {
+                throw new BadRequestException({
+                    status: 'ERROR',
+                    message:
+                        'La hora de inicio del descanso debe ser menor a la hora de fin del descanso',
+                    data: null,
+                })
+            }
+        }
+
         const schedule = await this.scheduleRepository.findOne({
             where: { id },
         })

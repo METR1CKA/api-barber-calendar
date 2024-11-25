@@ -12,7 +12,7 @@ export class IsValidTimeConstraint implements ValidatorConstraintInterface {
     public validate(value: string, args: ValidationArguments): boolean {
         if (!value || typeof value !== 'string') return false
 
-        const format = args.constraints[0]
+        const [format] = args.constraints
 
         const validationResult = FormatDateTime.isValid({
             datetime: {
