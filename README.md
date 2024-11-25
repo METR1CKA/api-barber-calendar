@@ -28,6 +28,8 @@
 
 ## Project setup
 
+> Use the .env.example file to create a .env file in the root folder of the project.
+
 ```bash
 $ npm install
 ```

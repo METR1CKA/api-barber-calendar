@@ -1,21 +1,22 @@
-import { NotFoundExceptionFilter } from './core/exceptions/not-found-exception.filter'
-import { BadRequestExceptionFilter } from './core/exceptions/bad-request-exception.filter'
-import { TimeTransformPipe } from './core/pipes/time-transform.pipe'
-import { SeederService } from './database/seeders/seeder.service'
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import {
     ClassSerializerInterceptor,
     Logger,
     ValidationPipe,
 } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
+import { BadRequestExceptionFilter } from './core/exceptions/bad-request-exception.filter'
+import { NotFoundExceptionFilter } from './core/exceptions/not-found-exception.filter'
+import { TimeTransformPipe } from './core/pipes/time-transform.pipe'
+import { SeederService } from './database/seeders/seeder.service'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { NestFactory, Reflector } from '@nestjs/core'
+import { ConfigService } from '@nestjs/config'
 import { AppModule } from './app.module'
-import { AuthJwtGuard } from './core/guards/auth-jwt.guard'
 
 async function bootstrap() {
     // Build App
-    const app = await NestFactory.create(AppModule)
+    const app = await NestFactory.create(AppModule, {
+        logger: ['log', 'error', 'warn', 'debug'],
+    })
 
     const configService = app.get(ConfigService)
 
