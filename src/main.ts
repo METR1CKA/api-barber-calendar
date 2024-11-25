@@ -11,6 +11,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { NestFactory, Reflector } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
 import { AppModule } from './app.module'
+import * as yaml from 'js-yaml'
+import * as fs from 'fs'
 
 async function bootstrap() {
     // Build App
@@ -56,18 +58,30 @@ async function bootstrap() {
         .setDescription('API for BarberShop management')
         .setVersion('1.0')
         .addBearerAuth()
-        .addServer(`http://${HOST}:${PORT}`, 'Development')
+        .addServer(
+            `http://${HOST === '0.0.0.0' ? '127.0.0.1' : HOST}:${PORT}`,
+            'Development',
+        )
         .setBasePath('api/v1')
         .setOpenAPIVersion('3.0.3')
         .addGlobalParameters({
             in: 'header',
             name: 'Timezone',
             required: false,
-            description: 'Timezone for the request',
         })
         .build()
 
-    SwaggerModule.setup('/', app, SwaggerModule.createDocument(app, document))
+    const createSwagger = SwaggerModule.createDocument(app, document)
+
+    SwaggerModule.setup('/', app, createSwagger)
+
+    const yamlSchema = yaml.dump(createSwagger)
+
+    fs.writeFileSync('./src/docs/swagger.yaml', yamlSchema)
+    fs.writeFileSync(
+        './src/docs/swagger.json',
+        JSON.stringify(createSwagger, null, 2),
+    )
 
     // Start App
     await app.listen(PORT, HOST)
