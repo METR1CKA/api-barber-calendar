@@ -39,6 +39,10 @@ export class UsersController {
         status: HttpStatus.BAD_REQUEST,
         description: 'Ya existe un usuario con este correo / El rol no existe',
     })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'No autorizado',
+    })
     public async create(
         @Body() createUserDto: CreateUserDto,
     ): Promise<ApiResponseType<User>> {
@@ -51,6 +55,10 @@ export class UsersController {
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Usuarios obtenidos correctamente',
+    })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'No autorizado',
     })
     public async findAll(
         @Query() query: GetUsersDto,
@@ -68,6 +76,10 @@ export class UsersController {
     @ApiResponse({
         status: HttpStatus.NOT_FOUND,
         description: 'Usuario no encontrado',
+    })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'No autorizado',
     })
     public async findOne(
         @Param('id', ParseIntPipe) id: number,
@@ -90,6 +102,10 @@ export class UsersController {
         status: HttpStatus.BAD_REQUEST,
         description: 'El rol no existe',
     })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'No autorizado',
+    })
     public async update(
         @Param('id', ParseIntPipe) id: number,
         @Body() updateUserDto: UpdateUserDto,
@@ -103,6 +119,10 @@ export class UsersController {
     @ApiResponse({
         status: HttpStatus.OK,
         description: 'Usuario activado/desactivado',
+    })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'No autorizado',
     })
     public async remove(
         @Param('id', ParseIntPipe) id: number,

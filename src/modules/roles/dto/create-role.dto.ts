@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator'
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
 export class CreateRoleDto {
     @IsString({
@@ -18,6 +18,6 @@ export class CreateRoleDto {
         message: 'La descripción del role debe ser un string',
     })
     @IsOptional()
-    @ApiProperty()
+    @ApiPropertyOptional()
     public description?: string | null
 }

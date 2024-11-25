@@ -46,6 +46,10 @@ export class AuthController {
         status: HttpStatus.OK,
         description: 'Cierre de sesión exitoso',
     })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'No autorizado',
+    })
     public async logout(@Req() request: Request) {
         return await this.authService.logout({ request })
     }
@@ -55,6 +59,10 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @ApiBearerAuth()
     @ApiResponse({ status: HttpStatus.OK, description: 'Perfil de usuario' })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'No autorizado',
+    })
     public async me(@Req() request: Request) {
         return await this.authService.me({ request })
     }

@@ -1,3 +1,4 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import {
     IsNotEmpty,
     IsNumber,
@@ -17,12 +18,14 @@ export class CreateServiceDto {
     @MaxLength(150, {
         message: 'El nombre no puede ser mayor a 150 caracteres',
     })
+    @ApiProperty()
     public name: string
 
     @IsOptional()
     @IsString({
         message: 'La descripción debe ser un texto',
     })
+    @ApiPropertyOptional()
     public description?: string
 
     @IsNotEmpty({
@@ -37,5 +40,6 @@ export class CreateServiceDto {
     @IsPositive({
         message: 'El precio debe ser un número positivo',
     })
+    @ApiProperty()
     public price: number
 }

@@ -8,13 +8,12 @@ import {
     Delete,
     Query,
     ParseIntPipe,
-    UseInterceptors,
-    ClassSerializerInterceptor,
     HttpCode,
     HttpStatus,
     UseGuards,
 } from '@nestjs/common'
 import { AuthJwtGuard } from 'src/core/guards/auth-jwt.guard'
+import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger'
 import { CreateServiceDto } from './dto/create-service.dto'
 import { UpdateServiceDto } from './dto/update-service.dto'
 import { GetServiceDto } from './dto/get-service.dto'
@@ -23,12 +22,21 @@ import { ServicesService } from './services.service'
 @Controller({
     path: 'api/v1/services',
 })
+@ApiBearerAuth()
 export class ServicesController {
     constructor(private readonly servicesService: ServicesService) {}
 
     @Post()
     @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.CREATED)
+    @ApiResponse({
+        status: HttpStatus.CREATED,
+        description: 'Servicio creado',
+    })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'No autorizado',
+    })
     public async create(@Body() createServiceDto: CreateServiceDto) {
         return await this.servicesService.create({ createServiceDto })
     }
@@ -36,7 +44,14 @@ export class ServicesController {
     @Get()
     @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.OK)
-    @UseInterceptors(ClassSerializerInterceptor)
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Servicios obtenidos correctamente',
+    })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'No autorizado',
+    })
     public async findAll(@Query() query: GetServiceDto) {
         return await this.servicesService.findAll({ qs: query })
     }
@@ -44,7 +59,18 @@ export class ServicesController {
     @Get(':id')
     @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.OK)
-    @UseInterceptors(ClassSerializerInterceptor)
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Servicio encontrado',
+    })
+    @ApiResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'Servicio no encontrado',
+    })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'No autorizado',
+    })
     public async findOne(@Param('id', ParseIntPipe) id: number) {
         return await this.servicesService.findOne({ by: { id } })
     }
@@ -52,6 +78,18 @@ export class ServicesController {
     @Patch(':id')
     @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.OK)
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Servicio actualizado',
+    })
+    @ApiResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'Servicio no encontrado',
+    })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'No autorizado',
+    })
     public async update(
         @Param('id', ParseIntPipe) id: number,
         @Body() updateServiceDto: UpdateServiceDto,
@@ -65,6 +103,14 @@ export class ServicesController {
     @Delete(':id')
     @UseGuards(AuthJwtGuard)
     @HttpCode(HttpStatus.OK)
+    @ApiResponse({
+        status: HttpStatus.OK,
+        description: 'Servicio activado/desactivado',
+    })
+    @ApiResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'No autorizado',
+    })
     public async remove(@Param('id', ParseIntPipe) id: number) {
         return await this.servicesService.remove({ id })
     }
