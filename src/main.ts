@@ -57,6 +57,14 @@ async function bootstrap() {
         .setVersion('1.0')
         .addBearerAuth()
         .addServer(`http://${HOST}:${PORT}`, 'Development')
+        .setBasePath('api/v1')
+        .setOpenAPIVersion('3.0.3')
+        .addGlobalParameters({
+            in: 'header',
+            name: 'Timezone',
+            required: false,
+            description: 'Timezone for the request',
+        })
         .build()
 
     SwaggerModule.setup('/', app, SwaggerModule.createDocument(app, document))

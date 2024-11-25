@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger'
 import {
     IsBoolean,
     IsNotEmpty,
@@ -21,6 +22,7 @@ export class CreateAppointmentDto {
     @IsPositive({
         message: 'El id del usuario barbero debe ser un numero positivo',
     })
+    @ApiProperty()
     public user_barber_id: number
 
     @IsNotEmpty({
@@ -35,6 +37,7 @@ export class CreateAppointmentDto {
     @IsPositive({
         message: 'El id del usuario cliente debe ser un numero positivo',
     })
+    @ApiProperty()
     public user_customer_id: number
 
     @IsNotEmpty({
@@ -49,6 +52,7 @@ export class CreateAppointmentDto {
     @IsPositive({
         message: 'El id del servicio debe ser un numero positivo',
     })
+    @ApiProperty()
     public service_id: number
 
     @IsNotEmpty({
@@ -60,6 +64,7 @@ export class CreateAppointmentDto {
     @IsValidTime(FORMATS.FULL, {
         message: `La fecha de la cita debe tener el formato ${FORMATS.FULL}`,
     })
+    @ApiProperty()
     public appointment_date: string
 
     @IsNotEmpty({
@@ -68,5 +73,6 @@ export class CreateAppointmentDto {
     @IsBoolean({
         message: 'El status de la cita debe ser un booleano',
     })
+    @ApiProperty()
     public status: boolean
 }
