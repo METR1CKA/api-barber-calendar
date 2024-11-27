@@ -5,6 +5,13 @@ import { User } from '../../users/entities/user.entity'
 import { Exclude, Transform } from 'class-transformer'
 import { DateTime } from 'luxon'
 
+export enum STATUS {
+    PENDING = 'PENDING',
+    ACEPTED = 'ACEPTED',
+    COMPLETED = 'COMPLETED',
+    CANCELED = 'CANCELED',
+}
+
 @Entity({
     name: 'appointments',
 })
@@ -40,8 +47,12 @@ export class Appointment {
     )
     public appointment_date: DateTime
 
-    @Column()
-    public status: boolean
+    @Column({
+        type: 'enum',
+        enum: STATUS,
+        default: STATUS.PENDING,
+    })
+    public status: STATUS
 
     @Column()
     public active: boolean

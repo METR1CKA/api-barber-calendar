@@ -1,17 +1,20 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import {
     IsBoolean,
+    IsEnum,
     IsNotEmpty,
     IsNumber,
+    IsOptional,
     IsPositive,
     IsString,
 } from 'class-validator'
 import { IsValidTime } from 'src/core/decorators/is-valid-time.decorator'
 import { FORMATS } from 'src/shared/utils/luxon-datetime'
+import { STATUS } from '../entities/appointment.entity'
 
 export class CreateAppointmentDto {
-    @IsNotEmpty({
-        message: 'El id del usuario barbero es requerido',
+    @IsOptional({
+        message: 'El id de la cita es opcional',
     })
     @IsNumber(
         {},
@@ -22,11 +25,11 @@ export class CreateAppointmentDto {
     @IsPositive({
         message: 'El id del usuario barbero debe ser un numero positivo',
     })
-    @ApiProperty()
-    public user_barber_id: number
+    @ApiPropertyOptional()
+    public user_barber_id?: number
 
-    @IsNotEmpty({
-        message: 'El id del usuario cliente es requerido',
+    @IsOptional({
+        message: 'El id de la cita es opcional',
     })
     @IsNumber(
         {},
@@ -37,8 +40,8 @@ export class CreateAppointmentDto {
     @IsPositive({
         message: 'El id del usuario cliente debe ser un numero positivo',
     })
-    @ApiProperty()
-    public user_customer_id: number
+    @ApiPropertyOptional()
+    public user_customer_id?: number
 
     @IsNotEmpty({
         message: 'El id del servicio es requerido',
@@ -70,9 +73,11 @@ export class CreateAppointmentDto {
     @IsNotEmpty({
         message: 'El status de la cita es requerido',
     })
-    @IsBoolean({
-        message: 'El status de la cita debe ser un booleano',
+    @IsEnum(STATUS, {
+        message: `El status de la cita debe ser uno de los siguientes valores: ${Object.values(
+            STATUS,
+        ).join(', ')}`,
     })
     @ApiProperty()
-    public status: boolean
+    public status: STATUS
 }

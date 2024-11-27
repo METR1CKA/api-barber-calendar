@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { Repository } from 'typeorm'
 import { GetAppointmentDto } from './dto/get-appointment.dto'
+import { ServicesService } from '../services/services.service'
 
 @Injectable()
 export class AppointmentsService {
@@ -13,6 +14,7 @@ export class AppointmentsService {
         @InjectRepository(Appointment)
         private appointmentRepository: Repository<Appointment>,
         private usersService: UsersService,
+        private servicesService: ServicesService,
     ) {}
 
     public async create({
@@ -26,6 +28,10 @@ export class AppointmentsService {
 
         await this.usersService.findOne({
             by: { id: createAppointmentDto.user_customer_id },
+        })
+
+        await this.servicesService.findOne({
+            by: { id: createAppointmentDto.service_id },
         })
 
         const newAppointment =
@@ -92,13 +98,23 @@ export class AppointmentsService {
         id: number
         updateAppointmentDto: UpdateAppointmentDto
     }) {
-        await this.usersService.findOne({
-            by: { id: updateAppointmentDto.user_barber_id },
-        })
+        if (updateAppointmentDto.user_barber_id) {
+            await this.usersService.findOne({
+                by: { id: updateAppointmentDto.user_barber_id },
+            })
+        }
 
-        await this.usersService.findOne({
-            by: { id: updateAppointmentDto.user_customer_id },
-        })
+        if (updateAppointmentDto.user_customer_id) {
+            await this.usersService.findOne({
+                by: { id: updateAppointmentDto.user_customer_id },
+            })
+        }
+
+        if (updateAppointmentDto.service_id) {
+            await this.servicesService.findOne({
+                by: { id: updateAppointmentDto.service_id },
+            })
+        }
 
         const appointment = await this.appointmentRepository.findOne({
             where: { id },

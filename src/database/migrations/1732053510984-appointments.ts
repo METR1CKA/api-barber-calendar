@@ -1,3 +1,4 @@
+import { STATUS } from 'src/modules/appointments/entities/appointment.entity'
 import {
     MigrationInterface,
     QueryRunner,
@@ -55,8 +56,14 @@ export class Appoiments1732053510984 implements MigrationInterface {
                     // STATUS
                     new TableColumn({
                         isNullable: false,
-                        type: 'boolean',
+                        type: 'enum',
                         name: 'status',
+                        enum: [
+                            STATUS.PENDING,
+                            STATUS.ACEPTED,
+                            STATUS.COMPLETED,
+                            STATUS.CANCELED,
+                        ],
                     }),
 
                     // ACTIVE

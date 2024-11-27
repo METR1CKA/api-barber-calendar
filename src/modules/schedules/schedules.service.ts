@@ -116,6 +116,12 @@ export class SchedulesService {
         id: number
         updateScheduleDto: UpdateScheduleDto
     }) {
+        if (updateScheduleDto.user_barber_id) {
+            await this.usersService.findOne({
+                by: { id: updateScheduleDto.user_barber_id },
+            })
+        }
+
         if (updateScheduleDto.start_time && updateScheduleDto.end_time) {
             if (updateScheduleDto.start_time > updateScheduleDto.end_time) {
                 throw new BadRequestException({
