@@ -52,7 +52,7 @@ async function bootstrap() {
     const seeders = app.get(SeederService)
     await seeders.seed()
 
-    // Swagger
+    // Swagger Docs
     const document = new DocumentBuilder()
         .setTitle('API BarberShop')
         .setDescription('API for BarberShop management')
