@@ -53,39 +53,43 @@ async function bootstrap() {
     await seeders.seed()
 
     // Swagger Documentation
+
+    const timezoneHeader: any = {
+        in: 'header',
+        name: 'Timezone',
+        required: false
+    }
+
     const document = new DocumentBuilder()
         .setTitle('API BarberShop')
         .setDescription('API for BarberShop management')
         .setVersion('1.0')
         .addBearerAuth()
+        .setBasePath('api/v1')
+        .setOpenAPIVersion('3.0.3')
+        .addGlobalParameters(timezoneHeader)
         .addServer(
             `http://${HOST === '0.0.0.0' ? '127.0.0.1' : HOST}:${PORT}`,
             'Development',
         )
-        .setBasePath('api/v1')
-        .setOpenAPIVersion('3.0.3')
-        .addGlobalParameters({
-            in: 'header',
-            name: 'Timezone',
-            required: false,
-        })
         .build()
 
     const createSwagger = SwaggerModule.createDocument(app, document)
 
-    SwaggerModule.setup('/', app, createSwagger)
+    SwaggerModule.setup('/', app, () => createSwagger)
 
     const yamlSchema = yaml.dump(createSwagger)
 
     const filename = 'swagger.yaml'
-    const path = './src/docs'
+    const folder = './src/docs'
+    const fullpath = `${folder}/${filename}`
 
-    if (!fs.existsSync('./src/docs')) {
-        fs.mkdirSync('./src/docs')
+    if (!fs.existsSync(folder)) {
+        fs.mkdirSync(folder)
     }
 
-    if (!fs.existsSync(`${path}/${filename}`)) {
-        fs.writeFileSync(`${path}/${filename}`, yamlSchema)
+    if (!fs.existsSync(fullpath)) {
+        fs.writeFileSync(fullpath, yamlSchema)
     }
 
     // Start App
